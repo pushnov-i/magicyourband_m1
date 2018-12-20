@@ -24,38 +24,25 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php $_item = $this->getItem() ?>
-<?php $_order = $this->getItem()->getOrder() ?>
-<?php $is3d=false; ?>
-
+<?php
+$_item = $this->getItem();
+$_order = $this->getItem()->getOrder();
+$mediaModel = Mage::getModel('catalog/product_media_config');
+?>
 <tr>
+    <td align="left" valign="top" style="padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
+		<img src="<?php echo $mediaModel->getMediaUrl($_item->getProduct()->getThumbnail()) ?>" width="135" height="135" alt="<?php echo $_item->getName() ?>" /> 
+	</td>
     <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
-        <strong style="font-size:11px;"><?php echo $this->escapeHtml($_item->getName()) ?></strong>
+        <strong style="font-size:11px;"><?php echo $this->escapeHtml($_item->getName()) ?>XXs</strong>
         <?php if ($this->getItemOptions()): ?>
-         <?php 
-         foreach ($this->getItemOptions() as $option){
-             if ($option['label']=='printJobId'){ 
-              $is3d=true; 
-              $label = $option['label'];
-              $value = nl2br($option['value']);
-             }
-         } 
-         
-         ?>
         <dl style="margin:0; padding:0;">
-        <?php if(!$is3d){ ?>
             <?php foreach ($this->getItemOptions() as $option): ?>
-            <dt><strong><em><?php echo $option['label'] ?></em></strong></dt>
+            <dt><strong><em><?php echo $option['label'] ?></em>ee</strong></dt>
             <dd style="margin:0; padding:0 0 0 9px;">
                 <?php echo nl2br($option['value']) ?>
             </dd>
             <?php endforeach; ?>
-         <?php }else{ ?>    
-             <dt><strong><em><?php echo $label ?></em></strong></dt>
-              <dd style="margin:0; padding:0 0 0 9px;">
-               <?php echo $value ?>
-             </dd>
-         <?php } ?> 
         </dl>
         <?php endif; ?>
         <?php $addInfoBlock = $this->getProductAdditionalInformationBlock(); ?>
@@ -64,12 +51,7 @@
         <?php endif; ?>
         <?php echo $this->escapeHtml($_item->getDescription()) ?>
     </td>
-    <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
-    <?php 
-    $sku = $this->escapeHtml($this->getSku($_item));
-    $pieces = explode("-", $sku); 
-    echo $pieces[0]; 
-    ?></td>
+    <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;"><?php echo $this->escapeHtml($this->getSku($_item)) ?></td>
     <td align="center" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;"><?php echo $_item->getQtyOrdered()*1 ?></td>
     <td align="right" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
         <?php if ($this->helper('tax')->displaySalesPriceExclTax($_order->getStore()) || $this->helper('tax')->displaySalesBothPrices($_order->getStore())): ?>
