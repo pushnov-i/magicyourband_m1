@@ -29,22 +29,27 @@ $_item = $this->getItem();
 $_order = $this->getItem()->getOrder();
 $mediaModel = Mage::getModel('catalog/product_media_config');
 ?>
+<?php
+$output = '';
+if ($this->getItemOptions()):
+    $output = '<dl style="margin:0; padding:0;">';
+    foreach ($this->getItemOptions() as $option):
+        if($option['label'] == 'thumburl') {
+            $print_image = nl2br($option['value']);
+        }
+        $output .= ' <dt><strong><em>'.$option['label'].'</em>ee</strong></dt>';
+        $output .= '<dd style="margin:0; padding:0 0 0 9px;">'.nl2br($option['value']).'</dd>';
+    endforeach;
+    $output .= '</dl>';
+endif; ?>
+
 <tr>
     <td align="left" valign="top" style="padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
-		<img src="<?php echo $mediaModel->getMediaUrl($_item->getProduct()->getThumbnail()) ?>" width="135" height="135" alt="<?php echo $_item->getName() ?>" /> 
-	</td>
+        <img src="<?php echo isset($print_image) ? $print_image : $mediaModel->getMediaUrl($_item->getProduct()->getThumbnail()) ?>" width="135" height="135" alt="<?php echo $_item->getName() ?>" />
+    </td>
     <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
         <strong style="font-size:11px;"><?php echo $this->escapeHtml($_item->getName()) ?>XXs</strong>
-        <?php if ($this->getItemOptions()): ?>
-        <dl style="margin:0; padding:0;">
-            <?php foreach ($this->getItemOptions() as $option): ?>
-            <dt><strong><em><?php echo $option['label'] ?></em>ee</strong></dt>
-            <dd style="margin:0; padding:0 0 0 9px;">
-                <?php echo nl2br($option['value']) ?>
-            </dd>
-            <?php endforeach; ?>
-        </dl>
-        <?php endif; ?>
+        <?php echo $output;?>
         <?php $addInfoBlock = $this->getProductAdditionalInformationBlock(); ?>
         <?php if ($addInfoBlock) :?>
             <?php echo $addInfoBlock->setItem($_item)->toHtml(); ?>
@@ -69,9 +74,9 @@ $mediaModel = Mage::getModel('catalog/product_media_config');
                 <br />
                 <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'email', $_order->getStore())): ?>
                     <small>
-                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
-                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount'],true,true); ?></span><br />
-                    <?php endforeach; ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount'],true,true); ?></span><br />
+                        <?php endforeach; ?>
                     </small>
                 <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'email', $_order->getStore())): ?>
                     <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
@@ -79,9 +84,9 @@ $mediaModel = Mage::getModel('catalog/product_media_config');
                     <?php endforeach; ?>
                 <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'email', $_order->getStore())): ?>
                     <small>
-                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
-                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount'],true,true); ?></span><br />
-                    <?php endforeach; ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount'],true,true); ?></span><br />
+                        <?php endforeach; ?>
                     </small>
                 <?php endif; ?>
 
@@ -98,18 +103,18 @@ $mediaModel = Mage::getModel('catalog/product_media_config');
                 <br /><span class="label"><?php echo Mage::helper('tax')->__('Incl. Tax'); ?>:</span>
             <?php endif; ?>
             <?php $_incl = $this->helper('checkout')->getSubtotalInclTax($_item); ?>
-                <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'email', $_order->getStore())): ?>
-                    <?php echo $_order->formatPrice($_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?>
-                <?php else: ?>
-                    <?php echo $_order->formatPrice($_incl-$_item->getWeeeTaxRowDisposition()) ?>
-                <?php endif; ?>
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'email', $_order->getStore())): ?>
+                <?php echo $_order->formatPrice($_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?>
+            <?php else: ?>
+                <?php echo $_order->formatPrice($_incl-$_item->getWeeeTaxRowDisposition()) ?>
+            <?php endif; ?>
             <?php if (Mage::helper('weee')->getApplied($_item)): ?>
                 <br />
                 <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'email', $_order->getStore())): ?>
                     <small>
-                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
-                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
-                    <?php endforeach; ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
+                        <?php endforeach; ?>
                     </small>
                 <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'email', $_order->getStore())): ?>
                     <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
@@ -117,9 +122,9 @@ $mediaModel = Mage::getModel('catalog/product_media_config');
                     <?php endforeach; ?>
                 <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'email', $_order->getStore())): ?>
                     <small>
-                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
-                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
-                    <?php endforeach; ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $_order->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
+                        <?php endforeach; ?>
                     </small>
                 <?php endif; ?>
 
@@ -131,12 +136,12 @@ $mediaModel = Mage::getModel('catalog/product_media_config');
     </td>
 </tr>
 <?php if ($_item->getGiftMessageId() && $_giftMessage = $this->helper('giftmessage/message')->getGiftMessage($_item->getGiftMessageId())): ?>
-<tr>
-    <td colspan="4" style=" border-bottom:2px solid #CCCCCC; padding:3px 9px;">
-        <strong style="color:#444444; font-size:11px;"><?php echo $this->__('Gift Message') ?></strong>
-        <?php echo $this->__('From:'); ?> <?php echo $this->escapeHtml($_giftMessage->getSender()) ?><br />
-        <?php echo $this->__('To:'); ?> <?php echo $this->escapeHtml($_giftMessage->getRecipient()) ?><br />
-        <strong><?php echo $this->__('Message:'); ?></strong><br /><?php echo $this->escapeHtml($_giftMessage->getMessage()) ?>
-    </td>
-</tr>
+    <tr>
+        <td colspan="4" style=" border-bottom:2px solid #CCCCCC; padding:3px 9px;">
+            <strong style="color:#444444; font-size:11px;"><?php echo $this->__('Gift Message') ?></strong>
+            <?php echo $this->__('From:'); ?> <?php echo $this->escapeHtml($_giftMessage->getSender()) ?><br />
+            <?php echo $this->__('To:'); ?> <?php echo $this->escapeHtml($_giftMessage->getRecipient()) ?><br />
+            <strong><?php echo $this->__('Message:'); ?></strong><br /><?php echo $this->escapeHtml($_giftMessage->getMessage()) ?>
+        </td>
+    </tr>
 <?php endif; ?>
