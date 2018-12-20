@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+    <name>Meetanshi_CookieNotice</name>
+    <version>1.0.2</version>
+    <stability>stable</stability>
+    <license>OSL v3.0</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Magento Cookie Notice by Meetanshi helps to make your Magento store comply with the EU's GDPR Cookie policy. Display a notification bar or popup in the frontend announcing your cookie policy and ask for users' consent.</summary>
+    <description>Magento Cookie Notice by Meetanshi helps to make your Magento store comply with the EU's GDPR Cookie policy. Display a notification bar or popup in the frontend announcing your cookie policy and ask for users' consent.</description>
+    <notes>Magento Cookie Notice by Meetanshi helps to make your Magento store comply with the EU's GDPR Cookie policy. Display a notification bar or popup in the frontend announcing your cookie policy and ask for users' consent.</notes>
+    <authors><author><name>Meetanshi</name><user>Meetanshi</user><email>support@meetanshi.com</email></author></authors>
+    <date>2018-10-03</date>
+    <time>04:19:12</time>
+    <contents><target name="magelocal"><dir name="Meetanshi"><dir name="CookieNotice"><dir name="Helper"><file name="Data.php" hash="fbb7ea58d96914885ad09dfc4cb26a7a"/></dir><dir name="Model"><dir name="Config"><dir name="Bar"><file name="Position.php" hash="a6671f8ddcee20ae7fdfff94b70e630b"/></dir><file name="Behaviour.php" hash="2cca0e589d482c9f1511d705243708d5"/><dir name="Box"><file name="Position.php" hash="7b3ea902215089ce7440c4f91564aab6"/></dir><file name="Fontfamily.php" hash="b0d45225ba3cf224f9e079674c1526ef"/><file name="Fontsize.php" hash="0dd45623c063deea395ffd453d45a991"/><file name="Message.php" hash="3176d6032bc7582f35d3d9402860dde1"/><file name="Textalign.php" hash="a156e5a99a563968ecd73f9bd7236bad"/><file name="Type.php" hash="1f99af299482aa3623ed5f3b30bd44c9"/></dir></dir><dir name="etc"><file name="config.xml" hash="2de95e682d85f3a70cca3e6d42752178"/><file name="system.xml" hash="85a2870eb525228e79fbf40fbb6c1346"/></dir></dir></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="layout"><file name="cookienotice.xml" hash="cbb6965809ac9b5cf5dfd1e9065f493f"/></dir><dir name="template"><dir name="cookienotice"><file name="after_body_start.phtml" hash="4968fdab2f8aac96b12169b654bd424d"/><file name="before_body_end.phtml" hash="8697785c1e825d0f143a9641aba31d2c"/><file name="widget.phtml" hash="15fd1cea182f0454c22b38ed0ae1f8d2"/></dir></dir></dir></dir></dir></target><target name="mageskin"><dir name="frontend"><dir name="base"><dir name="default"><dir name="css"><dir name="cookienotice"><file name="cookienotice.css" hash="ceda2c41a3fc9a4fa15767096c1b0662"/></dir></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Meetanshi_CookieNotice.xml" hash="4bd1cb39ffab20d41f4a2f6317e90f9f"/></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.1.0</min><max>7.0.2</max></php></required></dependencies>
+</package>

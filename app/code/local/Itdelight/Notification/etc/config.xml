@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Itdelight_Notification>
+      <version>0.1.0</version>
+    </Itdelight_Notification>
+  </modules>
+  <global>
+    <helpers>
+      <notification>
+        <class>Itdelight_Notification_Helper</class>
+      </notification>
+    </helpers>
+	<resources>
+	  <topnotification_setup>
+		<setup>
+		  <module>Itdelight_Notification</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </topnotification_setup>
+	  <topnotification_setup>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </topnotification_setup>
+	  <topnotification_setup>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </topnotification_setup>
+	</resources>
+  </global>
+</config> 
