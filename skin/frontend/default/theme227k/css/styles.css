@@ -655,6 +655,7 @@ tr.summary-details-excluded { font-style:italic; }
 .header .logo img {max-width:100%; height:auto;}
 
 /* Header ================================================================================ */
+.top-notification {width: 60%; padding: 3px; border: 3px solid #f7730e; border-radius: 14px; font-size: 14px; float: none; text-align: center; margin: auto;}
 .top-container { background:#fff; }
 .top_block { margin:0 -30px; padding:8px 0; }
 .header-container-tile { background:url(../images/bg_header.gif) repeat-x; }

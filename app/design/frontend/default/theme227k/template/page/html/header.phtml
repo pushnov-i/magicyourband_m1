@@ -49,6 +49,11 @@
     <div class="top-search"><i class="icon-search"></i></div>
     <span class="clear"></span>
 </div>
+<?php if(Mage::getModel('cms/block')->load('top-notification-home')->getIsActive() && $this->getIsHomePage()):?>
+<div class="top-notification">
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('top-notification-home')->toHtml() ?>
+</div>
+<?php endif;?>
 <div class="top-container">
 	<div class="container">
 		<div class="row">
