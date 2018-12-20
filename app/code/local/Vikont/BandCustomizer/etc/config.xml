@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<config>
+
+	<modules>
+		<Vikont_BandCustomizer>
+			<version>1.0</version>
+		</Vikont_BandCustomizer>
+	</modules>
+
+
+	<admin>
+	</admin>
+
+
+	<frontend>
+
+		<routers>
+			<bandcustomizer>
+				<use>standard</use>
+				<args>
+					<module>Vikont_BandCustomizer</module>
+					<frontName>bandcustomizer</frontName>
+				</args>
+			</bandcustomizer>
+		</routers>
+
+		<layout>
+			<updates>
+				<bandcustomizer>
+					<file>bandcustomizer.xml</file>
+				</bandcustomizer>
+			</updates>
+		</layout>
+
+<!--		<translate>
+			<modules>
+				<Vikont_BandCustomizer>
+					<files>
+						<default>Vikont_BandCustomizer.csv</default>
+					</files>
+				</Vikont_BandCustomizer>
+			</modules>
+		</translate>-->
+
+	</frontend>
+
+
+	<adminhtml>
+
+<!--		<translate>
+			<modules>
+				<Vikont_BandCustomizer>
+					<files>
+						<default>Vikont_BandCustomizer.csv</default>
+					</files>
+				</Vikont_BandCustomizer>
+			</modules>
+		</translate>-->
+
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<bandcustomizer module="bandcustomizer" translate="title">
+											<title>Band Customizer</title>
+											<sort_order>1000</sort_order>
+										</bandcustomizer>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+
+	</adminhtml>
+
+
+	<global>
+
+		<blocks>
+			<bandcustomizer>
+				<class>Vikont_BandCustomizer_Block</class>
+			</bandcustomizer>
+		</blocks>
+
+		<helpers>
+			<bandcustomizer>
+				<class>Vikont_BandCustomizer_Helper</class>
+			</bandcustomizer>
+		</helpers>
+
+<!--		<models>
+			<bandcustomizer>
+				<class>Vikont_BandCustomizer_Model</class>
+				<resourceModel>bandcustomizer_mysql4</resourceModel>
+			</bandcustomizer>
+			<bandcustomizer_mysql4>
+				<class>Vikont_BandCustomizer_Model_Mysql4</class>
+				<entities>
+					<import>
+						<table>bandcustomizer_import</table>
+					</import>
+					<garage>
+						<table>bandcustomizer_garage</table>
+					</garage>
+				</entities>
+			</bandcustomizer_mysql4>
+		</models>-->
+
+		<resources>
+			<bandcustomizer_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</bandcustomizer_read>
+			<bandcustomizer_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</bandcustomizer_write>
+			<bandcustomizer_setup>
+				<setup>
+					<module>Vikont_BandCustomizer</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</bandcustomizer_setup>
+        </resources>
+
+	</global>
+
+	<default>
+		<bandcustomizer>
+			<general>
+				<!--<active>1</active>-->
+			</general>
+		</bandcustomizer>
+	</default>
+
+</config>

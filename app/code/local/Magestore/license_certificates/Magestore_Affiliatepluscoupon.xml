@@ -1,0 +1,7 @@
+<config>
+   <Magestore_Affiliatepluscoupon>
+      <name>Affiliate Coupon plugin (4.1)</name>
+      <type>depend</type>
+      <depend>Magestore_Affiliateplus-standard</depend>
+   </Magestore_Affiliatepluscoupon>
+</config>

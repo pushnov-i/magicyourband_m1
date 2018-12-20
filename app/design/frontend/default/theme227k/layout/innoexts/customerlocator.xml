@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ *
+ * @category    Innoexts
+ * @package     Innoexts_CustomerLocator
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<layout>
+
+    <default>
+        <reference name="head">
+            <action method="addCss">
+                <name>innoexts/customerlocator/css/styles.css</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="customerlocator/customer_geolocator" name="customer.geolocator" after="-" template="innoexts/customerlocator/customer/geolocator.phtml"/>
+        </reference>
+    </default>
+
+    <default>
+        <reference name="right">
+            <block type="customerlocator/customer_address" name="customer.address" before="-" template="innoexts/customerlocator/customer/address.phtml"/>
+        </reference>
+    </default>
+
+</layout>

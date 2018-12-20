@@ -1,0 +1,54 @@
+<div class="page-title category-title">    
+    <h1><?php echo $this->__('Promotions Notification') ?></h1>
+</div>
+<div class="promotions-notification-list">
+    <div class= "notificationtabs">
+            <ul id="notificationtabs">
+                <li class="item first active" data-type="current"><span class="title"><?php echo $this->__('Current') ?></span></li>
+                <li class="item last" data-type="upcoming"><span class="title"><?php echo $this->__('Upcoming') ?></span></li>
+            </ul>
+            <div class="ajax_loading" style="display:none">
+                <img src="<?php echo $this->getSkinUrl('magehit_notification/images/ajax_load.gif')?>" alt="<?php echo $this->__('Loading...');?>">
+            </div>
+            <div class="notificationtabs-content">
+                <div id="notificationtabs-content"></div>
+            </div>
+    
+    </div>
+</div>
+<script type="text/javascript">
+    
+    jQuery( document ).ready(function($) {
+        (function(selector){
+            
+            $content = $(selector);
+            $nav     = $('#notificationtabs', $content);
+            $contentResult = $('#notificationtabs-content', $content);
+            $loading = $(".ajax_loading", $content);
+            $items      = $('.item', $nav);
+            $items.click(function() {
+                var type = $(this).data('type');
+                if(type != "random" && $(this).hasClass('active')) return;
+                $items.removeClass('active');
+                $(this).addClass('active');
+                getNotificationList(type);
+            });
+            getNotificationList('current');
+            function getNotificationList(type) {
+                $loading.show();
+                $.ajax({
+                    type:'post',
+                    data:{ type: type},
+                    url:'<?php echo $this->getUrl('notification/index/result')?>',
+                    success: function(data){
+                        $loading.hide();
+                        $contentResult.html(data);        
+                        $data = data;       
+                    },
+                });        
+            }
+
+        })('.notificationtabs');
+
+        });
+</script>

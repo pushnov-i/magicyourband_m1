@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/*
+* @category    Module
+* @package     Sonassi_CatFix
+* @copyright   Copyright (c) 2012 Sonassi
+*/
+-->
+<config>
+  <modules>
+    <Sonassi_CatFix>
+      <active>true</active>
+      <codePool>community</codePool>
+    </Sonassi_CatFix>
+  </modules>
+</config>

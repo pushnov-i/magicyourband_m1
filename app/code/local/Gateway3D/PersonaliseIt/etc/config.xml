@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Gateway3D
+ * @package Personalise-iT
+ * @author James Ball <james@gateway3d.co.uk>
+ * @copyright Copyright (c) 2013 Gateway 3D Ltd.
+ */
+-->
+
+<config>
+	<modules>
+		<Gateway3D_PersonaliseIt>
+			<version>1.7.2.1</version>
+		</Gateway3D_PersonaliseIt>
+	</modules>
+	<global>
+		<models>
+			<personaliseit>
+				<class>Gateway3D_PersonaliseIt_Model</class>
+				<resourceModel>personaliseit_mysql4</resourceModel>
+			</personaliseit>
+
+			<catalog>
+				<rewrite>
+					<product_option>Gateway3D_PersonaliseIt_Model_Catalog_Product_Option</product_option>
+				</rewrite>
+            </catalog>
+		</models>
+
+		<helpers>
+			<personaliseit>
+				<class>Gateway3D_PersonaliseIt_Helper</class>
+			</personaliseit>
+		</helpers>
+
+		<resources>
+			<personaliseit_setup>
+				<setup>
+					<module>Gateway3D_PersonaliseIt</module>
+					<class>Gateway3D_PersonaliseIt_Model_Resource_Eav_Mysql4_Setup</class>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</personaliseit_setup>
+			<personaliseit_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</personaliseit_write>
+			<personaliseit_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</personaliseit_read>
+		</resources>
+
+		<catalog>
+			<product>
+				<options>
+					<custom>
+						<groups>
+							<hidden translate="label" module="personaliseit">
+								<label>Hidden</label>
+								<render>adminhtml/catalog_product_edit_tab_options_type_text</render>
+
+								<types>
+									<hidden translate="label" module="personaliseit">
+                                        <label>Hidden</label>
+                                    </hidden>
+								</types>
+							</hidden>
+						</groups>
+					</custom>
+				</options>
+			</product>
+		</catalog>
+
+		<blocks>
+			<adminhtml>
+				<rewrite>
+					<catalog_product_edit_tab_options>Gateway3D_PersonaliseIt_Block_Adminhtml_Catalog_Product_Edit_Tab_Options</catalog_product_edit_tab_options>
+				</rewrite>
+				<rewrite>
+					<catalog_product_edit_tab_options_option>Gateway3D_PersonaliseIt_Block_Adminhtml_Catalog_Product_Edit_Tab_Options_Option</catalog_product_edit_tab_options_option>
+				</rewrite>
+			</adminhtml>
+
+			<catalog>
+				<rewrite>
+					<product_view_options>Gateway3D_PersonaliseIt_Block_Product_View_Options</product_view_options>
+				</rewrite>
+			</catalog>
+		</blocks>
+	</global>
+	<frontend>
+		<routers>
+			<personaliseit>
+				<use>standard</use>
+				<args>
+					<module>Gateway3D_PersonaliseIt</module>
+					<frontName>personalise-it</frontName>
+				</args>
+			</personaliseit>
+		</routers>
+		<layout>
+			<updates>
+				<personaliseit>
+					<file>personaliseit.xml</file>
+				</personaliseit>
+			</updates>
+		</layout>
+	</frontend>
+	<adminhtml>
+		<layout>
+			<updates>
+				<personaliseit>
+					<file>personaliseit.xml</file>
+				</personaliseit>
+			</updates>
+		</layout>
+	</adminhtml>
+	<crontab>
+		<jobs>
+			<personaliseit>
+				<schedule>
+					<cron_expr>*/10 * * * *</cron_expr>
+				</schedule>
+				<run>
+					<model>personaliseit/cron_delayedPrintJob::start</model>
+					<model>personaliseit/cron_sl::start</model>
+				</run>
+			</personaliseit>
+		</jobs>
+	</crontab>
+
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<Gateway3D_PersonaliseIt before="Mage_Adminhtml">Gateway3D_PersonaliseIt</Gateway3D_PersonaliseIt>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
+
+	<default>
+		<general>
+			<personaliseit-delayed-preview>
+				<api_path>https://my.gateway3d.com/acp/api/p/2/print-job</api_path>
+			</personaliseit-delayed-preview>
+
+			<personaliseit-sl>
+				<api_path>https://my.gateway3d.com/acp/api/sl/2.1/order</api_path>
+				<strict_addresses>1</strict_addresses>
+			</personaliseit-sl>
+
+			<personaliseit-cpp>
+				<api_path>https://my.gateway3d.com/acp/api/</api_path>
+			</personaliseit-cpp>
+		</general>
+	</default>
+</config>

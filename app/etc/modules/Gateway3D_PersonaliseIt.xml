@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Gateway3D
+ * @package Personalise-iT
+ * @author James Ball <james@gateway3d.co.uk>
+ * @copyright Copyright (c) 2013 Gateway 3D Ltd.
+ */
+-->
+
+<config>
+	<modules>
+		<Gateway3D_PersonaliseIt>
+			<active>true</active>
+			<codePool>local</codePool>
+		</Gateway3D_PersonaliseIt>
+	</modules>
+</config>
+

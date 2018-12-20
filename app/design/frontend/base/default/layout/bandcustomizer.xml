@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+	<default>
+		<reference name="head">
+			<action method="addItem">
+				<type>skin_css</type>
+				<name>vikont/bandcustomizer/main.css</name>
+			</action>
+		</reference>
+	</default>
+
+
+	<catalog_product_view>
+		<reference name="product.info.extrahint">
+			<block type="bandcustomizer/button" name="bandcustomizer_button" />
+		</reference>
+	</catalog_product_view>
+
+</layout>

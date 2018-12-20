@@ -1,0 +1,95 @@
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyPricing
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+
+/**
+ * Control
+ */
+.control {}
+.control .control-actions {
+    margin-bottom: 15px;
+}
+/**
+ * Product Compound Price
+ */
+.compound-price-grid .data {
+    width: auto !important; 
+}
+.compound-price-grid .data th.currency {
+    width: 100px !important; 
+}
+.compound-price-grid .data th.price {
+    width: 150px !important; 
+}
+.compound-price-grid .data th.default-price {
+    width: 100px !important; 
+}
+/**
+ * Product Tier Price
+ */
+.tier-price-grid .data {
+    width: auto !important; 
+}
+.tier-price-grid .data th.website {
+    width: 140px !important; 
+}
+.tier-price-grid .data th.customer-group {
+    width: 120px !important; 
+}
+.tier-price-grid .data th.price {
+    width: 57px !important; 
+}
+.tier-price-grid .data th.qty {
+    width: 57px !important; 
+}
+.tier-price-grid .data th.currency {
+    width: 95px !important; 
+}
+/**
+ * Product Group Price
+ */
+.group-price-grid .data {
+    width: auto !important; 
+}
+.group-price-grid .data th.website {
+    width: 140px !important; 
+}
+.group-price-grid .data th.customer-group {
+    width: 120px !important; 
+}
+.group-price-grid .data th.price {
+    width: 57px !important; 
+}
+.group-price-grid .data th.currency {
+    width: 95px !important; 
+}
+/**
+ * Catalog Rule Compound Discount Amount
+ */
+.compound-discount-amount-grid .data {
+    width: auto !important; 
+}
+.compound-discount-amount-grid .data th.currency {
+    width: 100px !important; 
+}
+.compound-discount-amount-grid .data th.amount {
+    width: 150px !important; 
+}
+.compound-discount-amount-grid .data th.default-amount {
+    width: 100px !important; 
+}

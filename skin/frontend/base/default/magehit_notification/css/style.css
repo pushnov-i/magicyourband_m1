@@ -1,0 +1,62 @@
+/*.notification-top{
+    width:100%;
+    text-align: center;
+}*/
+.close-notification{
+    background-image: url(../images/close-icon.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 32px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-indent: -9999px;
+    width: 32px;  
+}
+.not-item{
+   /* height:35px;*/
+    line-height: 35px;
+    text-align: center;
+}
+
+.notificationtabs{position:relative}
+.notificationtabs ul#notificationtabs{padding:10px 0;display:flex;background:#3399cc ;margin:0}
+.notificationtabs ul#notificationtabs li{padding:0;display:inline}
+.notificationtabs ul#notificationtabs li.first {border-right:2px solid #fff}
+.notificationtabs ul#notificationtabs li.active span{color:#000}
+.notificationtabs ul li span.title{font-size: 13px;font-weight: bold; padding: 5px 10px;color:#fff;text-transform:uppercase;cursor:pointer}
+.notificationtabs .bx-controls{position: absolute;right: 0; top:-30px;}
+.notificationtabs .bx-controls a{color: #fff; font-weight: bold;  margin: 0 5px;}
+.notificationtabs .ajax_loading {
+    bottom:0;
+    height: 32px;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 32px;
+    z-index: 1000;
+    display:none;
+}
+.notificationtabs-content{
+    position: relative;
+    float: left;
+    width: 100%;
+    min-height: 100px;
+}
+.notificationtabs p.title-notification{;
+    font-size: 12px;
+    text-align: left;
+    font-weight: bold;
+    color: #ef6160;
+    margin: 3px 0px -1px 1%;
+    border-bottom: 1px dashed #cccccc;
+    padding: 9px 5px;
+}
+.notificationtabs .content-notification{;
+    margin-left: 1%;
+    border: 1px solid rgb(221, 221, 221);
+    padding: 5px;
+    font-size: 12px;
+}

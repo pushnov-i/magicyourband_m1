@@ -1,0 +1,53 @@
+<?php
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ *
+ * @category    Innoexts
+ * @package     Innoexts_Core
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $helper             = $this->helper('innoexts_core') ?>
+<?php $element            = $this->getElement() ?>
+<?php $elementHtmlId      = $element->getHtmlId() ?>
+<?php $elementLabel       = $element->getLabel() ?>
+<?php $elementDependent   = $element->getDependent() ?>
+
+<?php $controlId          = $this->getControlHtmlId() ?>
+<?php $controlJsObject    = $this->getControlJsObjectName() ?>
+
+<tr>
+    <td class="label"><label for="<?php echo $elementHtmlId ?>"><?php echo $elementLabel ?></label></td>
+    <td id="<?php echo $controlId ?>" class="value control">
+        <div class="control-body">
+            <?php echo $element->getElementHtml() ?>
+        </div>
+        
+<script type="text/javascript">
+//<![CDATA[
+
+var <?php echo $controlJsObject ?> = {};
+
+document.observe("dom:loaded", function () {
+    <?php echo $controlJsObject ?> = new CheckboxControl({
+        elementId:          '<?php echo $controlId ?>', 
+        dependent:          <?php echo $helper->jsonEncode($elementDependent) ?>
+    });
+});
+
+//]]>
+</script>
+        
+    </td>
+</tr>

@@ -1,0 +1,167 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+<?php
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+
+	$product = $this->getProduct();
+	
+	// There are several different iFrame URLs that might be available to us
+	// and we need to determine which one to use.
+	//
+	// This is done in the following order:
+	// 
+	//	1)	If the client browser supports WebGL and a URL has been specified
+	//		for WebGL then the WebGL URL is used.
+	//
+	//	2)	If the client browser supports Flash and a URL has been specified
+	//		for Flash then the Flash URL is used.
+	//
+	//	3)	If the client browser is a mobile phone and a URL has been specified
+	//		for mobile phone devices then the mobile phone URL is used. Note
+	//		that this does not include tablet devices.
+	//
+	//	4)	If a standard iFrame URL has been specified then we use it.
+	//
+	//	5)	If a legacy EasyPromo3D URL has been specified then we use it.
+	//
+	//	6)	If the above all fail then we use the standard Magento product view.
+	//
+	// Note that (1) and (2) are only detectable on the client side.
+	//
+	// First we determine which of (3), (4) and (5) should be used.
+	
+	$detect = new Gateway3D_PersonaliseIt_Helper_MobileDetect;
+	$isMobile = $detect->isMobile() && !$detect->isTablet();
+	
+	$urlKey = $isMobile ? 'personaliseit_m_iframe_url' : 'personaliseit_iframe_url';
+	
+	$defaultUrl = trim($product->{$urlKey});
+	
+	if($isMobile && !$defaultUrl)
+	{
+		$defaultUrl = trim($product->personaliseit_iframe_url);
+	}
+	
+	if(!$defaultUrl)
+	{
+		$defaultUrl = trim($product->easypromo3d_url);
+	}
+	
+	// Determine which URLs are available
+	$hasWebGlUrl = !!$product->personaliseit_gl_iframe_url;
+	$hasFlashUrl = !!$product->personaliseit_fl_iframe_url;
+	$hasDefaultUrl = !!$defaultUrl;
+	$hasUrl = $hasWebGlUrl || $hasFlashUrl || $hasDefaultUrl;
+	
+	// Init standard params that all URLs will need
+	$params = array(
+		'id'	=> $_product->getId(),
+	);
+	
+	$epa = rawurlencode(Mage::getUrl('personaliseit/product/epa', $params));	
+	$callback = rawurlencode(Mage::getUrl('personaliseit/product/callback', $params));
+	
+	// Build URLs
+	$defaultUrl = "{$defaultUrl}&a2cpost=1&epa={$epa}&ep3dUrl={$callback}&guid={$product->personaliseit_company_ref_id}";
+	$flashUrl = "{$product->personaliseit_fl_iframe_url}&a2cpost=1&epa={$epa}&ep3dUrl={$callback}&guid={$product->personaliseit_company_ref_id}";
+	$webGlUrl = "{$product->personaliseit_gl_iframe_url}&a2cpost=1&epa={$epa}&ep3dUrl={$callback}&guid={$product->personaliseit_company_ref_id}";
+?>
+
+<?php if($hasUrl && $product->personaliseit_company_ref_id): ?>
+	<iframe id="personalise-it-iframe" style="border: 0; width: 100%; height: 100%;" src=""></iframe>
+	
+	<script>
+		var webGlUrl = <?= $hasWebGlUrl ? "\"{$webGlUrl}\"" : 'false' ?>;
+		var flashUrl = <?= $hasFlashUrl ? "\"{$flashUrl}\"" : 'false' ?>;
+		var defaultUrl = <?= $hasDefaultUrl ? "\"{$defaultUrl}\"" : 'false' ?>;
+		
+		var hasWebGl = !!document.createElement('canvas').getContext("webgl");
+		var hasFlash = ((typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false));
+		
+		var url = "";
+		
+		if(hasWebGl && webGlUrl) {
+			url = webGlUrl;
+		} else if(hasFlash && flashUrl) {
+			url = flashUrl;
+		} else if(defaultUrl) {
+			url = defaultUrl;
+		}
+									
+		document.getElementById('personalise-it-iframe').src = url;
+	</script>
+<?php else: ?>
+	<?php if ($_product->getImage() != 'no_selection' && $_product->getImage()): ?>
+	<p class="product-image product-image-zoom">
+		<?php
+			$_img = '<img id="image" src="'.$this->helper('catalog/image')->init($_product, 'image').'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
+			echo $_helper->productAttribute($_product, $_img, 'image');
+		?>
+	</p>
+	<p class="zoom-notice" id="track_hint"><?php echo $this->__('Double click on above image to view full picture') ?></p>
+	<div class="zoom">
+		<img id="zoom_out" src="<?php echo $this->getSkinUrl('images/slider_btn_zoom_out.gif') ?>" alt="<?php echo $this->__('Zoom Out') ?>" title="<?php echo $this->__('Zoom Out') ?>" class="btn-zoom-out" />
+		<div id="track">
+			<div id="handle"></div>
+		</div>
+		<img id="zoom_in" src="<?php echo $this->getSkinUrl('images/slider_btn_zoom_in.gif') ?>" alt="<?php echo $this->__('Zoom In') ?>" title="<?php echo $this->__('Zoom In') ?>" class="btn-zoom-in" />
+	</div>
+	<script type="text/javascript">
+	//<![CDATA[
+		Event.observe(window, 'load', function() {
+			product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');
+		});
+	//]]>
+	</script>
+	<?php else: ?>
+	<p class="product-image">
+		<?php
+			$_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->resize(265).'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
+			echo $_helper->productAttribute($_product, $_img, 'image');
+		?>
+	</p>
+	<?php endif; ?>
+	<?php if (count($this->getGalleryImages()) > 0): ?>
+	<div class="more-views">
+		<h2><?php echo $this->__('More Views') ?></h2>
+		<ul>
+		<?php foreach ($this->getGalleryImages() as $_image): ?>
+			<li>
+				<a href="#" onclick="popWin('<?php echo $this->getGalleryUrl($_image) ?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(56); ?>" width="56" height="56" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" /></a>
+			</li>
+		<?php endforeach; ?>
+		</ul>
+	</div>
+	<?php endif; ?>
+<?php endif; ?>

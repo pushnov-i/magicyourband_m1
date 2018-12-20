@@ -1,0 +1,205 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+    $_helper    = $this->helper('catalog/output');
+    $_category  = $this->getCurrentCategory();
+    $_imgHtml   = '';
+    if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<p class="category-image"><img src="'.$_imgUrl.'" alt="'.$this->escapeHtml($_category->getName()).'" title="'.$this->escapeHtml($_category->getName()).'" /></p>';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }
+?>
+<div class="page-title category-title">
+    <?php if($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+        <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+    <?php endif; ?>
+    <h1><?php echo $_helper->categoryAttribute($_category, $_category->getName(), 'name') ?></h1>
+</div>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<?php if($_imgUrl): ?>
+    <?php echo $_imgHtml ?>
+<?php endif; ?>
+
+<?php if($_description=$this->getCurrentCategory()->getDescription()): ?>
+    <div class="category-description std">
+        <?php echo $_helper->categoryAttribute($_category, $_description, 'description') ?>
+    </div>
+    <?php endif; ?>
+
+<?php
+
+$curCategory  = $this->getCurrentCategory();
+
+if ($curCategory->hasChildren()):
+
+                                  $collection   = Mage::getModel('catalog/category')->getCategories($curCategory->entity_id);
+                                  $helper       = Mage::helper('catalog/category');
+                                  
+                                  $countSubCatInRow=3;
+                                  
+                                  $imgWidth="270px";
+                                  $imgHeight="270px";
+                                  
+                                  $categoryPlaceholderUrl = $this->getSkinUrl('images/catalog/category/placeholder/image.png');
+                                  if ($categoryPlaceholderUrl==''):
+                                      $categoryPlaceholderUrl = $this->getSkinUrl('images/catalog/product/placeholder/image.jpg');
+                                  endif;
+                                  
+                                  $i=1;
+                                  $j=0;
+?>
+                                  <div class="subcategories">
+                                      <?foreach ($collection as $subCat):?>           
+                                              <?php
+                                                  $subCatId = $subCat->getId();                 
+                                                  $subCatName = $subCat->getName();
+                                                  $subCatUrl = $helper->getCategoryUrl($subCat);
+                                                  
+                                                  $subCategory = Mage::getModel('catalog/category')->load($subCatId);
+                                                  $thumbnail = $subCategory->getThumbnail();
+                                                  $catImgUrl = $subCategory->getImageUrl();
+                                                  
+                                                  // create folder
+                                                  if(!file_exists("./media/catalog/category/resized")):
+                                                      mkdir("./media/catalog/category/resized",0777);
+                                                  endif;
+                                                  
+                                                  if ($thumbnail){            
+                                                      // Get your category thumbnail url
+                                                      $imageUrl = Mage::getBaseDir('media').DS."catalog".DS."category".DS.$thumbnail;
+                                                      // get image name
+                                                      $imageName = $thumbnail;
+                                                      // resized image path (media/catalog/category/resized/IMAGE_NAME)
+                                                      $imageResized = Mage::getBaseDir('media').DS."catalog".DS."category".DS."resized".DS.$imageName;
+                                                      // changing image url into direct path
+                                                      $dirImg = Mage::getBaseDir().str_replace("/",DS,strstr($imageUrl,'/media'));
+                                                      // if resized image doesn’t exist, save the resized image to the resized directory
+                                                      if (!file_exists($imageResized)&&file_exists($dirImg)){
+                                                      $imageObj = new Varien_Image($dirImg);
+                                                      $imageObj->constrainOnly(TRUE);
+                                                      $imageObj->keepAspectRatio(TRUE);
+                                                      $imageObj->keepFrame(TRUE);
+                                                      $imageObj->backgroundColor(array(255,255,255));
+                                                      $imageObj->resize($imgWidth, $imgHeight);
+                                                      $imageObj->save($imageResized);
+                                                      }
+                                                      $thumbnailResizedUrl = Mage::getBaseUrl('media')."catalog/category/resized/".$imageName;
+                                                  }
+                                                  else {
+                                                      if($catImgUrl){
+                                                          // Category image url
+                                                          $imageUrl = $catImgUrl;
+                                                          // Category images path
+                                                          $catImgPath = Mage::getBaseUrl('media')."catalog/category/";
+                                                          // get image name
+                                                          $imageName = str_replace($catImgPath, "", $imageUrl);
+                                                          // resized image path (media/catalog/category/resized/IMAGE_NAME)
+                                                          $imageResized = Mage::getBaseDir('media').DS."catalog".DS."category".DS."resized".DS.$imageName;
+                                                          // changing image url into direct path
+                                                          $dirImg = Mage::getBaseDir().str_replace("/",DS,strstr($imageUrl,'/media'));
+                                                          // if resized image doesn’t exist, save the resized image to the resized directory
+                                                          if (!file_exists($imageResized)&&file_exists($dirImg)){
+                                                          $imageObj = new Varien_Image($dirImg);
+                                                          $imageObj->constrainOnly(TRUE);
+                                                          $imageObj->keepAspectRatio(TRUE);
+                                                          $imageObj->keepFrame(TRUE);
+                                                          $imageObj->backgroundColor(array(255,255,255));
+                                                          $imageObj->resize($imgWidth, $imgHeight);
+                                                          $imageObj->save($imageResized);
+                                                          }
+                                                          $thumbnailResizedUrl = Mage::getBaseUrl('media')."catalog/category/resized/".$imageName;
+                                                      }
+                                                      else{
+                                                          $thumbnailResizedUrl = $categoryPlaceholderUrl;
+                                                      }
+                                                  }
+                                              ?>
+                                                  
+                                              <?php if ($i==1): ?>
+                                                  <div class="subcat-line-wrapper row">
+                                              <?php endif; ?>
+                                              
+                                                      <div class="subcat col-xs-12 col-sm-4 <?php if ($i==1): echo 'first'; endif; ?><?php if ($i==$countSubCatInRow): echo 'last'; endif; ?>">
+                                                          <a class="subcat-thumbnail" href="<?php echo $subCatUrl ?>" >
+                                                              <img src="<?php echo $thumbnailResizedUrl ?>" width="<?php echo $imgWidth ?>" height="<?php echo $imgHeight ?>" title="<?php echo $subCatName ?>"/>
+                                                          </a>
+                                                          <h2 class="subcat-name">
+                                                              <a href="<?php echo $subCatUrl ?>">
+                                                                  <?php echo $subCatName ?>
+                                                              </a>
+                                                          </h2>
+                                                      </div>
+                                              
+                                              <?php if ($i==$countSubCatInRow): ?>
+                                                  </div><!--.subcat-line-wrapper-->
+                                                  <?php $i=1; ?>
+                                                  <?php $j=0; ?>
+                                              <?php else: ?>    
+                                                  <?php $i++; ?>
+                                                  <?php $j=1; ?>
+                                              <?php endif; ?>
+                                              
+                                      <?php endforeach;?>
+                                      
+                                              <?php if ($j==1): ?>
+                                                  </div><!--.subcat-line-wrapper-->
+                                              <?php endif; ?>
+                                                  
+                                  </div><!--.subcategories-->
+                                  
+                                  <div style="clear: both;"></div>
+
+
+    <?php if($this->isContentMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+    <?php elseif($this->isMixedMode()): ?>    
+        <?php echo $this->getCmsBlockHtml() ?>
+    <?php endif; ?>
+
+<?php else: ?>
+
+    <?php if($this->isContentMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+    
+    <?php elseif($this->isMixedMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+        <?php echo $this->getProductListHtml() ?>
+    
+    <?php else: ?>
+        <?php echo $this->getProductListHtml() ?>
+    <?php endif; ?>
+
+<?php endif; ?>

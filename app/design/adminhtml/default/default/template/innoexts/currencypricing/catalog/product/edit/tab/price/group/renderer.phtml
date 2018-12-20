@@ -1,0 +1,186 @@
+<?php
+/**
+ * Innoexts
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyPricing
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+?>
+
+<?php $helper                   = $this->helper('currencypricing') ?>
+<?php $element                  = $this->getElement() ?>
+<?php $elementName              = $element->getName() ?>
+<?php $elementClass             = $element->getClass() ?>
+<?php $elementLabel             = $element->getLabel() ?>
+<?php $elementReadonly          = $element->getReadonly() ?>
+
+<?php $controlId                = $this->getControlHtmlId() ?>
+<?php $controlJsObject          = $this->getControlJsObjectName() ?>
+
+<?php $isGroupPriceFixed        = $this->isGroupPriceFixed() ?>
+<?php $websites                 = $helper->getCoreHelper()->getWebsites() ?>
+<?php $isShowWebsite            = $this->isShowWebsiteColumn() ?>
+<?php $tableColSpan             = (!$isGroupPriceFixed) ? 4 : 5 ?>
+<?php if (!$isShowWebsite)  $tableColSpan++  ?>
+
+<tr>
+    <td class="label"><label><?php echo $elementLabel ?></label></td>
+    <td id="<?php echo $controlId ?>" class="control grid group-price-grid">
+        <div class="control-body">
+            <table cellspacing="0" class="data border">
+                <thead>
+                    <tr class="headings">
+                        <th class="website"<?php if (!$isShowWebsite): ?> style="display:none"<?php endif ?>>
+                            <?php echo $helper->__('Website') ?>
+                        </th>
+                        <th class="customer-group">
+                            <?php echo $helper->__('Customer Group') ?>
+                        </th>
+                        <th class="price">
+                            <?php echo $this->getPriceColumnHeader($helper->__('Price')) ?>
+                        </th>
+                        <?php if ($isGroupPriceFixed) : ?>
+                        <th class="currency">
+                            <?php echo $helper->__('Currency') ?>
+                        </th>
+                        <?php endif; ?>
+                        <th class="action last">
+                            <?php echo $helper->__('Action') ?>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="<?php echo $tableColSpan ?>" class="a-right">
+                            <?php echo $this->getAddButtonHtml() ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+<script type="text/javascript">
+//<![CDATA[
+
+var groupPriceColumns = [
+    /**
+     * Website
+     */
+    {
+        name:               'website_id', 
+        class:              'website', 
+        <?php if (!$isShowWebsite): ?>
+        hiddenContainer:    1, 
+        <?php endif ?>
+        <?php if (!$this->isAllowChangeWebsite()): ?>
+        hidden:             1, 
+        <?php endif ?>
+        template:           '<select class="<?php echo $elementClass ?> website required-entry" name="<?php echo $elementName ?>[{{index}}][website_id]">'
+        <?php foreach ($this->getWebsites() as $websiteId => $website): ?>
+        + '<option value="<?php echo $websiteId ?>">'
+            + '<?php echo $this->jsQuoteEscape($this->htmlEscape($website['name'])) ?>'
+            + '<?php if (!empty($website['currency'])): ?> [<?php echo $this->htmlEscape($website['currency']) ?>]<?php endif; ?>'
+        + '</option>'
+        <?php endforeach ?>
+        + '</select>'
+    }, 
+    /**
+     * Customer Group
+     */
+    {
+        name:               'customer_group_id', 
+        class:              'customer-group', 
+        template:           '<select class="<?php echo $elementClass ?> customer-group required-entry" name="<?php echo $elementName ?>[{{index}}][cust_group]">'
+        <?php foreach ($this->getCustomerGroups() as $groupId => $group): ?>
+        + '<option value="<?php echo $groupId ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($group)) ?></option>'
+        <?php endforeach ?>
+        + '</select>'
+    }, 
+    /**
+     * Price
+     */
+    {
+        name:               'price', 
+        class:              'price', 
+        template:           '<input class="<?php echo $elementClass ?> <?php echo $this->getPriceValidation('validate-greater-than-zero') ?> price required-entry" type="text" name="<?php echo $elementName ?>[{{index}}][price]" />'
+    }, 
+    /**
+     * Currency
+     */
+    <?php if ($isGroupPriceFixed) : ?>
+    {
+        name:               'currency', 
+        class:              'currency', 
+        template:           '<select class="<?php echo $elementClass ?> currency" name="<?php echo $elementName ?>[{{index}}][currency]">'
+        + '<option value=""><?php echo $this->jsQuoteEscape($helper->__('All Currencies')) ?></option>'
+        <?php foreach ($this->getCurrencyCodes() as $currency): ?>
+        + '<option value="<?php echo $currency ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($currency)) ?></option>'
+        <?php endforeach ?>
+        + '</select>'
+    }, 
+    <?php endif ?>
+    /**
+     * Delete
+     */
+    {
+        name:               'delete', 
+        class:              'delete', 
+        template:           '<input class="delete" type="hidden" name="<?php echo $elementName ?>[{{index}}][delete]" />'
+        + '<button title="<?php echo $helper->__('Delete Group Price') ?>" type="button" class="scalable delete delete-button icon-btn">'
+        + '<span><?php echo $helper->__('Delete') ?></span>'
+        + '</button>'
+    }
+];
+
+var groupPriceItems = new Array();
+<?php foreach ($this->getValues() as $item): ?>
+var groupPriceItem = {
+    website_id:         '<?php echo $item['website_id'] ?>', 
+    customer_group_id:  '<?php echo $item['cust_group'] ?>', 
+    price:              '<?php echo sprintf('%.2f', $item['price']) ?>', 
+    <?php if ($isGroupPriceFixed) : ?>
+    currency:           '<?php echo $item['currency'] ?>', 
+    <?php endif ?>
+    readonly:           <?php echo (int) !empty($item['readonly']) ?>
+};
+groupPriceItems.push(groupPriceItem);
+<?php endforeach ?>
+
+var groupPriceDefaultItem = {
+    website_id:         '<?php echo $this->getDefaultWebsite() ?>', 
+    customer_group_id:  '<?php echo $this->getDefaultCustomerGroup() ?>', 
+    price:              '', 
+    <?php if ($isGroupPriceFixed) : ?>
+    currency:           '<?php echo $this->getDefaultCurrencyCode() ?>', 
+    <?php endif ?>
+    readonly:           0
+};
+
+document.observe("dom:loaded", function () {
+    <?php echo $controlJsObject ?> = new GroupPriceGridControl({
+        elementId:          '<?php echo $controlId ?>', 
+        columns:            groupPriceColumns, 
+        items:              groupPriceItems, 
+        defaultItem:        groupPriceDefaultItem, 
+        readonly:           <?php echo (($elementReadonly) ? 1 : 0) ?>
+    });
+});
+
+//]]>
+</script>
+
+    </td>
+</tr>

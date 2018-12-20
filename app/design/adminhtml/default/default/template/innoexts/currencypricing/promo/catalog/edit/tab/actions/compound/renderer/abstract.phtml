@@ -1,0 +1,105 @@
+<?php
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyPricing
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+?>
+<?php $helper                   = $this->helper('currencypricing') ?>
+<?php $element                  = $this->getElement() ?>
+<?php $elementName              = $element->getName() ?>
+<?php $elementLabel             = $element->getLabel() ?>
+<?php $elementClass             = $element->getClass() ?>
+<?php $elementReadonly          = $element->getReadonly() ?>
+<?php $elementReadonlyAttribute = ($elementReadonly) ? ' readonly="readonly"' : '' ?>
+
+<?php $controlId                = $this->getControlHtmlId() ?>
+<?php $controlJsObject          = $this->getControlJsObjectName() ?>
+
+<?php $baseCurrencyCode         = $this->getBaseCurrencyCode() ?>
+
+<tr>
+    <td class="label"><label><?php echo $elementLabel ?></label></td>
+    <td id="<?php echo $controlId ?>" class="control grid compound-discount-amount-grid">
+        <div class="control-actions">
+            <p>
+                <input type="checkbox" value="1" class="checkbox recalculate-by"<?php echo $elementReadonlyAttribute ?> />
+                &nbsp;<?php echo $helper->__('Recalculate By') ?>&nbsp;
+                <select class="recalculate-currency"<?php echo $elementReadonlyAttribute ?>>
+                    <?php foreach ($this->getCurrencyCodes() as $currencyCode): ?>
+                    <option value="<?php echo $currencyCode ?>"<?php if ($currencyCode == $baseCurrencyCode): ?> selected="selected"<?php endif ?>>
+                    <?php echo $currencyCode ?>
+                    </option>
+                    <?php endforeach ?>
+                </select>
+            </p>
+        </div>
+        <div class="control-body">
+            <table cellspacing="0" class="data border">
+                <thead>
+                    <tr class="headings">
+                        <th class="currency"><?php echo $helper->__('Currency'); ?></th>
+                        <th class="amount"><?php echo $helper->__('Amount'); ?></th>
+                        <th class="default-amount"><?php echo $helper->__('Default Amount'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->getValues() as $index => $item) : ?>
+                    <?php $currencyCode     = $item['currency'] ?>
+                    <?php $amount           = $item['amount'] ?>
+                    <?php $defaultAmount    = $item['default_amount'] ?>
+                    <?php $rates            = $item['rates'] ?>
+                    <?php $useDefault       = (int) $item['use_default'] ?>
+                    <tr>
+                        <td>
+                            <?php if (count($rates)) : ?>
+                            <?php foreach ($rates as $currencyCode2 => $rate) : ?>
+                            <input class="rate <?php echo $currencyCode2 ?>-rate" type="hidden" name="<?php echo $elementName ?>[<?php echo $index ?>][rate][<?php echo $currencyCode2 ?>]" value="<?php echo $rate ?>"<?php echo $elementReadonlyAttribute ?> />
+                            <?php endforeach ?>
+                            <?php endif ?>
+                            <input class="currency" type="hidden" name="<?php echo $elementName ?>[<?php echo $index ?>][currency]" value="<?php echo $currencyCode ?>"<?php echo $elementReadonlyAttribute ?> />
+                            <input class="default" type="hidden" name="<?php echo $elementName ?>[<?php echo $index ?>][default]" value="<?php echo $defaultAmount ?>"<?php echo $elementReadonlyAttribute ?> />
+                            <strong><?php echo $currencyCode ?></strong>
+                        </td>
+                        <td class="nobr">
+                            <input class="<?php echo $elementClass ?> price validate-number" type="text" name="<?php echo $elementName ?>[<?php echo $index ?>][amount]" value="<?php echo $amount ?>"<?php if ($useDefault) : ?> disabled="disabled"<?php endif ?><?php echo $elementReadonlyAttribute ?> />&nbsp;
+                            <input type="checkbox" name="<?php echo $elementName ?>[<?php echo $index ?>][use_default]" value="1"<?php if ($useDefault) : ?> checked="checked"<?php endif; ?> class="checkbox use-default"<?php echo $elementReadonlyAttribute ?> />
+                            <label class="normal"><?php echo $helper->__('Default') ?></label>
+                        </td>
+                        <td class="a-right default-amount">
+                            <?php echo $defaultAmount ?>
+                        </td>
+                    </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+document.observe("dom:loaded", function () {
+    <?php echo $controlJsObject ?> = new CompoundDiscountControl({
+        elementId:          '<?php echo $controlId ?>', 
+        actionElementId:    '<?php echo $this->getActionElementId() ?>', 
+        amountElementId:    '<?php echo $this->getAmountElementId() ?>'
+    });
+});
+
+//]]>
+</script>
+    </td>
+</tr>

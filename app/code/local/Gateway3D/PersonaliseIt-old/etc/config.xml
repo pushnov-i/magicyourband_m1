@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Gateway3D
+ * @package Personalise-iT
+ * @author James Ball <james@gateway3d.co.uk>
+ * @copyright Copyright (c) 2013 Gateway 3D Ltd.
+ */
+-->
+
+<config>
+    <modules>
+        <Gateway3D_PersonaliseIt>
+            <version>1.3.4.0</version>
+        </Gateway3D_PersonaliseIt>
+    </modules>
+    <global>
+		<models>
+			<personaliseit>
+                <class>Gateway3D_PersonaliseIt_Model</class>
+				<resourceModel>personaliseit_mysql4</resourceModel>
+            </personaliseit>	
+		</models>
+		
+		<helpers>
+			<personaliseit>
+            	<class>Gateway3D_PersonaliseIt_Helper</class>
+			</personaliseit>
+	    </helpers>
+		
+		<resources>
+            <personaliseit_setup>
+                <setup>
+                    <module>Gateway3D_PersonaliseIt</module>
+					<class>Gateway3D_PersonaliseIt_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </personaliseit_setup>
+            <personaliseit_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </personaliseit_write>
+            <personaliseit_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </personaliseit_read>
+        </resources>
+	</global>
+    <frontend>
+		<routers>
+			<personaliseit>
+				<use>standard</use>
+				<args>
+					<module>Gateway3D_PersonaliseIt</module>
+					<frontName>personalise-it</frontName>
+				</args>
+			</personaliseit>
+		</routers>
+		<layout>
+			<updates>
+				<personaliseit>
+					<file>personaliseit.xml</file>
+				</personaliseit>
+			</updates>
+		</layout>
+	</frontend>
+	<adminhtml>
+		<layout>
+			<updates>
+				<personaliseit>
+					<file>personaliseit.xml</file>
+				</personaliseit>
+			</updates>
+		</layout>
+	</adminhtml>
+	<crontab>
+		<jobs>
+			<personaliseit>
+				<schedule>
+					<cron_expr>*/10 * * * *</cron_expr>
+				</schedule>
+				<run>
+					<model>personaliseit/cron_sl::start</model>
+				</run>
+			</personaliseit>
+		</jobs>
+	</crontab>
+</config>

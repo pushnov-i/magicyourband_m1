@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Gateway3D
+ * @package Personalise-iT
+ * @author James Ball <james@gateway3d.co.uk>
+ * @copyright Copyright (c) 2013 Gateway 3D Ltd.
+ */
+-->
+
+<config>
+	<sections>
+		<general>
+			<groups>
+				<personaliseit-product-selector translate="label" module="personaliseit">
+					<label>G3D Personalise-iT Product Selector Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+						<iframe_url translate="label">
+							<label>iFrame URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+						</iframe_url>
+						
+						<mobile_iframe_url translate="label">
+							<label>Mobile iFrame URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+						</mobile_iframe_url>
+					</fields>
+				</personaliseit-product-selector>
+				
+				<personaliseit-sl translate="label" module="personaliseit">
+					<label>G3D Personalise-iT Supplier Link Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>0</show_in_store>
+					<fields>
+						<api_path translate="label">
+							<label>API Path</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</api_path>
+						<api_key translate="label">
+							<label>API Key</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>35</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<validate>required-entry validate-length minimum-length-27 maximum-length-27</validate>
+						</api_key>
+						<default_order_status translate="label">
+							<label>Default Order Status</label>
+							<frontend_type>select</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<source_model>personaliseit/source_orderstatus</source_model>							
+						</default_order_status>	
+						<enable_order_status_polling translate="label">
+							<label>Enable Order Status Polling (Legacy)</label>
+							<frontend_type>select</frontend_type>
+							<sort_order>45</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+						</enable_order_status_polling>
+					</fields>
+				</personaliseit-sl>
+			</groups>
+		</general>
+	</sections>
+</config>
+

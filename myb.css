@@ -1,0 +1,12 @@
+article#add-to-cart {
+ background-color: #F39140; font-weight: 900; 
+}
+
+#current-image-area-container>div.buttons {
+    width: 192px !important;
+    margin: 0 auto;
+}
+
+div#add-image {
+    width: 131px !important;
+}

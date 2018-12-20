@@ -1,0 +1,19 @@
+<?php
+?>
+<div id="vkCartImagePopup-overlay" class="vkCartImagePopup-overlay"></div>
+
+<div id="vkCartImagePopup-imgBox" class="vkCartImagePopup-imgBox">
+	<div class="vkCartImagePopup-imgBox-container">
+		<div class="vkCartImagePopup-imgBox-close">X</div>
+		<img id="vkCartImagePopup-img" src="" alt="Large product image" title="Product image" />
+	</div>
+</div>
+
+<script type="text/javascript">
+
+jQuery(document).ready(function() {
+	cartImagePopup = CartImagePopup();
+	cartImagePopup.init().hide();
+});
+
+</script>

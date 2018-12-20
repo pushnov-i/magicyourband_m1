@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Innoexts
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CustomerLocator
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Innoexts_CustomerLocator>
+            <version>1.3.0.0</version>
+        </Innoexts_CustomerLocator>
+    </modules>
+    <frontend>
+        <routers>
+            <customer>
+                <args>
+                    <modules>
+                        <Innoexts_CustomerLocator before="Mage_Customer">Innoexts_CustomerLocator_Customer</Innoexts_CustomerLocator>
+                    </modules>
+                </args>
+            </customer>
+        </routers>
+        <translate>
+            <modules>
+                <Innoexts_CustomerLocator>
+                    <files>
+                        <default>Innoexts_CustomerLocator.csv</default>
+                    </files>
+                </Innoexts_CustomerLocator>
+            </modules>
+        </translate>
+        <layout>
+              <updates>
+                  <customerlocator>
+                      <file>innoexts/customerlocator.xml</file>
+                  </customerlocator>
+              </updates>
+        </layout>
+        <events>
+            
+            <!-- Customer -->
+            <customer_customer_authenticated>
+                <observers>
+                    <customerlocator_customer_login_after>
+                        <class>customerlocator/customer_observer</class>
+                        <method>loginAfter</method>
+                    </customerlocator_customer_login_after>
+                </observers>
+            </customer_customer_authenticated>
+            <customer_logout>
+                <observers>
+                    <customerlocator_customer_logout_after>
+                        <class>customerlocator/customer_observer</class>
+                        <method>logoutAfter</method>
+                    </customerlocator_customer_logout_after>
+                </observers>
+            </customer_logout>
+            
+        </events>
+    </frontend>
+    <global>
+        <models>
+            <customerlocator>
+                <class>Innoexts_CustomerLocator_Model</class>
+            </customerlocator>
+            <sales>
+                <rewrite>
+                    <quote>Innoexts_CustomerLocator_Model_Sales_Quote</quote>
+                </rewrite>
+            </sales>
+        </models>
+        <blocks>
+            <customerlocator>
+                <class>Innoexts_CustomerLocator_Block</class>
+            </customerlocator>
+            <checkout>
+                <rewrite>
+                    <onepage_billing>Innoexts_CustomerLocator_Block_Checkout_Onepage_Billing</onepage_billing>
+                    <onepage_shipping>Innoexts_CustomerLocator_Block_Checkout_Onepage_Shipping</onepage_shipping>
+                </rewrite>
+            </checkout>
+        </blocks>
+        <helpers>
+            <customerlocator>
+                <class>Innoexts_CustomerLocator_Helper</class>
+            </customerlocator>
+        </helpers>
+        <events>
+            
+            <!-- Quote -->
+            <sales_quote_address_save_before>
+                <observers>
+                    <customerlocator_quote_address_save_before>
+                        <class>customerlocator/sales_quote_observer</class>
+                        <method>addressBeforeSave</method>
+                    </customerlocator_quote_address_save_before>
+                </observers>
+            </sales_quote_address_save_before>
+            
+        </events>
+    </global>
+    <default>
+        <customerlocator>
+            <options>
+                <allow_modification>1</allow_modification>
+                <use_default_shipping_address>1</use_default_shipping_address>
+                <use_coordinates_geolocation>0</use_coordinates_geolocation>
+                <use_ip_geolocation>1</use_ip_geolocation>
+                <adjust_address_on_checkout>1</adjust_address_on_checkout>
+                <allow_attributes>country,postcode,region,street</allow_attributes>
+                <require_attributes>country,postcode</require_attributes>
+            </options>
+            <default_address>
+                <country_id>US</country_id>
+                <region_id>12</region_id>
+                <postcode>90034</postcode>
+                <city>Los Angeles</city>
+            </default_address>
+        </customerlocator>
+    </default>
+</config>

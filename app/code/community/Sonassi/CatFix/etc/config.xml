@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/*
+* @category    Module
+* @package     Sonassi_Catfix
+* @copyright   Copyright (c) 2012 Sonassi
+*/
+-->
+<config>
+  <modules>
+    <Sonassi_CatFix>
+      <version>1.0.0</version>
+      <depends/>
+    </Sonassi_CatFix>
+  </modules>
+  <global>
+    <models>
+
+      <catalog>
+        <rewrite>
+          <product_type_configurable>Sonassi_CatFix_Model_Catalog_Product_Type_Configurable</product_type_configurable>
+        </rewrite>
+      </catalog>
+
+      <catalog_resource>
+        <rewrite>
+          <product_type_configurable_attribute_collection>Sonassi_CatFix_Model_Catalog_Resource_Product_Type_Configurable_Attribute_Collection</product_type_configurable_attribute_collection>
+        </rewrite>
+      </catalog_resource>
+
+      <eav>
+        <rewrite>
+          <entity_attribute_source_table>Sonassi_CatFix_Model_Eav_Entity_Attribute_Source_Table</entity_attribute_source_table>
+        </rewrite>
+      </eav>
+
+    </models>
+
+    <helpers>
+      <catfix>
+        <class>
+          Sonassi_CatFix_Helper
+        </class>
+      </catfix>
+    </helpers>
+
+  </global>
+</config>

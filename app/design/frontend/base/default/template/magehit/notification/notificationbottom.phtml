@@ -1,0 +1,54 @@
+<?php if(Mage::helper('notification')->getEnabled() && Mage::helper('notification')->getPosition() == 'bottom'){ 
+$isFixedPosition = Mage::helper('notification')->getPositionFixed();    
+$isNumberDisplay = Mage::helper('notification')->getNumberNotificationsDisplay();    
+?>
+<script>
+function hideElement(id){
+   jQuery('.notification-top').toggle("slow");
+}
+jQuery(function () {
+        jQuery('.notification-top').anyslider({
+            easing: 'swing',
+            interval: 3000,
+            reverse: true,
+            speed: 1500
+        });
+        
+        var scrollingDiv = jQuery(".notification-top");
+        var isFixedPosition  = "<?php echo $isFixedPosition ?>";
+        if(isFixedPosition == 1){
+            jQuery(window).scroll(function(){            
+                var scrollHeight = jQuery(document).height();
+                var scrollPosition = jQuery(window).height() + jQuery(window).scrollTop();
+                if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+                    scrollingDiv.css('position',"");
+                }
+                else{
+                    scrollingDiv.css('position',"fixed");
+                    scrollingDiv.css('z-index',99999999);
+                }
+            });
+        }
+    });
+
+</script>    
+<?php
+    $notifications = $this->getAllNotificationsActive();
+	if(!$isNumberDisplay) $isNumberDisplay = count($notifications);
+    $count = 1;
+    if(count($notifications) > 0){ ?>
+        <div class="notification-top" style="bottom:0px;width:100%">
+        <?php foreach($notifications as $notification){
+            if(Mage::helper('notification')->checkNotificationDisplay($notification->getNotificationId()) && $count <= $isNumberDisplay){ 
+                $count ++;
+                ?>
+                <div class="not-item" id="not-<?php echo $notification->getNotificationId() ?>" style="background-color: <?php echo $notification->getBackgroundColor() ?>; color: <?php echo $notification->getTextColor() ?>;">
+                    <?php print_r(htmlspecialchars_decode(stripslashes($notification->getContentNotification()))); ?>
+                <label class="close-notification" onclick="hideElement()"></label>    
+                </div>
+             
+        <?php } } ?>
+        </div>   
+<?php }?>    
+        
+<?php }?>

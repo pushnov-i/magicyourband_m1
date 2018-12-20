@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+        <magehit translate="label">
+            <label>Magehit</label>
+            <sort_order>100</sort_order>
+        </magehit>
+    </tabs>
+    <sections>
+        <notification translate="label" module="notification">
+            <label>Notification Configuration</label>
+            <tab>magehit</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>                
+                <config translate="label">
+		            <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>						
+						<enabled translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <position>
+                            <label>Position to display notification bar</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter: "top" or "bottom". Leave empty if for default position in top</comment>
+                        </position>
+                        <position_fixed>
+                            <label>Position Fixed at top/bottom</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>    
+                        </position_fixed>
+                        <numbernotification>
+                            <label>Number notifications will be displayed in slider</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Leave empty if allow display all notifications</comment>
+                        </numbernotification>
+                    </fields>
+                </config>
+            </groups>
+        </notification>
+    </sections>
+</config>

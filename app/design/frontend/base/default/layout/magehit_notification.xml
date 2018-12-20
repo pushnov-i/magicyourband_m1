@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss" ifconfig="notification/config/enabled">
+                <stylesheet>magehit_notification/css/style.css</stylesheet>
+            </action> 
+            <!-- <action method="addItem" ifconfig="notification/config/enabled">
+                <type>js</type>
+                <script>magehit_notification/jquery-1.10.2.min.js</script>
+                <sort_order>1</sort_order>
+            </action> -->
+            <action method="addItem" ifconfig="notification/config/enabled">
+                <type>js</type>
+                <script>magehit_notification/avoidConflictJquery.js</script>
+                <sort_order>1</sort_order>
+            </action>
+            <action method="addItem" ifconfig="notification/config/enabled">
+                <type>js</type>
+                <script>magehit_notification/jquery.easing.1.3.js</script>
+                <sort_order>2</sort_order>
+            </action>
+            <action method="addItem" ifconfig="notification/config/enabled">
+                <type>js</type>
+                <script>magehit_notification/jquery.anyslider.js</script>
+                <sort_order>3</sort_order>
+            </action>
+        </reference>
+        <!-- <reference name="top.links">
+            <action method="addLink" translate="label title" module="notification"><label>Promotions Notification</label><url helper="notification/getNotificationUrl"/><title>Promotions Notification</title><prepare/><urlParams/><position>11</position></action>
+        </reference> -->
+        <reference name="after_body_start">
+            <block type="notification/notificationtop" name="notification_top" as="notification_top" template="magehit/notification/notificationtop.phtml" />
+        </reference>
+        <reference name="before_body_end">
+            <block type="notification/notificationbottom" name="notification_bottom" as="notification_bottom" template="magehit/notification/notificationbottom.phtml" />
+        </reference>
+    </default>
+    <notification_index_index>
+        <reference name="root">
+            <action method="setTemplate"><template>page/3columns.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="notification" as="notification" template="magehit/notification/boxtabs.phtml">
+            </block>
+        </reference>
+    </notification_index_index>
+    <notification_index_result>  
+        <reference name="root">
+            <action method="setTemplate"><template>magehit/notification/list.phtml</template></action>
+            <block type="notification/list" name="notification_list" template="magehit/notification/result.phtml" /> 
+        </reference>
+    </notification_index_result>
+</layout> 

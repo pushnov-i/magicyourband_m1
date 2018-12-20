@@ -1,0 +1,55 @@
+<div class="agreements">
+    <?php 
+        $enable = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/enabled'));
+        $type = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/type'));        
+        $title = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/title'));
+        $url = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/url'));    
+    ?>
+    <?php 
+    if($enable){
+    ?>
+        <input id="accept_terms" class="checkbox required-entry" type="checkbox" name="accept_terms" value="1"/>
+        <?php
+            switch($type){ 
+            case 1 :
+        ?>
+            <label for="accept_terms">
+                <?php echo $this->__('I accept the'); ?>
+                <a class="terms-link"  rel="<?php echo $title; ?>" href="#"><?php echo $title; ?></a>
+            </label>
+        <?php 
+            break;
+            case 2:
+        ?>   
+            <label for="accept_terms">
+                <?php echo $this->__('I accept the'); ?>
+                <a  rel="<?php echo $title; ?>" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).$url; ?>" target="_bank"><?php echo $title; ?></a>
+            </label> 
+        <?php    
+            break;
+            }
+    }
+    ?>            
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $('.terms-link').click(function(e){
+            $('#control_overlay').show();
+    		$('.term_conditions').show();
+            e.preventDefault();
+        });
+        $('.close a').click(function(e){
+            $('#control_overlay').hide();
+            $('.term_conditions').hide();
+            e.preventDefault();
+        });
+        $('#control_overlay').click(function(e){
+            $('#control_overlay').hide();
+            $('.term_conditions').hide();
+            $('.opc_top').hide();
+            $('#fancycheckout_loginbox').hide();
+            $('#fancycheckout_forgotbox').hide();
+            e.preventDefault();
+        });
+    });
+</script>

@@ -1,0 +1,54 @@
+<?php 
+    $title_terms_conditions = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/title'));
+    $content = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/content'));
+    $enable_custom_size = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/enable_custom_size'));
+    $width = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/width'));
+    $height = trim(Mage::getStoreConfig('fancycheckout/terms_conditions/height'));
+    if(Mage::getModel('customer/session')->getData('message')){
+?>
+    <ul class="messages error_method">
+        <li class="error-msg">
+            <ul>
+                <li>
+                    <?php 
+                        echo Mage::getModel('customer/session')->getData('message'); 
+                        Mage::getModel('customer/session')->setData('message',null);
+                    ?>
+                </li>
+            </ul>
+        </li>
+    </ul>
+<?php 
+    }
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+<style>
+    .term_conditions{
+        <?php if($enable_custom_size){ ?>
+            width: <?php echo $width.'px' ?>;
+            height: <?php echo $height.'px' ?>;
+        <?php }else{ ?>
+            width: 500px;
+            height: 500px;
+        <?php } ?>
+    }
+    <?php 
+        if(Mage::getStoreConfig('fancycheckout/general/hide_shipping_method') && !Mage::getStoreConfig('fancycheckout/delivery/enabled')){
+    ?>
+        .opc_payment{
+            width:100%;   
+        }
+    <?php    
+    }
+    ?>
+</style>
+<div id="control_overlay"></div>
+<div class="term_conditions">
+	<div class="content_term_conditions" >
+		<h5><?php echo $title_terms_conditions; ?></h5>
+		<?php echo $content;?>
+	</div>
+    <p class="close">
+        <a href="#"><?php echo $this->__('Close') ?></a>
+    </p>
+</div>

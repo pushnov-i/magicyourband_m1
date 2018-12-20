@@ -1,0 +1,69 @@
+<?php if (!Mage::getSingleton('customer/session')->isLoggedIn()){?>
+    <div id="offcanvascheckout_forgotbox" class='customer_forgotpassword'>
+        <div class="page-title">
+            <strong><?php echo $this->__('Forgotten your password?') ?></strong>
+        </div>
+        <?php
+            $forgot_url	= $this->getUrl('fancycheckout/offcanvascheckout/forgotpassword', array('_secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on')));
+            $http_mode	= (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on');
+            if($http_mode)$forgot_url	= str_replace('http:', 'https:', $forgot_url);  
+        ?>
+        <form method="POST" name="forget-form" id="forget-form">
+            <div class="boxcontent form_fields">
+                <p><?php echo $this->__('Please enter your email address below. You will receive a link to reset your password.') ?></p>
+        		<div class='full field'>
+        			<label>
+        				<?php echo $this->__('Email') ?> <em>*</em>
+        			</label>
+        			
+        			<div class="input-box">
+        				<input type="text" name="email" alt="email" id="email_address" class="input-text required-entry validate-email" value="<?php echo $this->htmlEscape($this->getEmailValue()) ?>" />
+        			</div>
+                </div>
+                <div class="forget-message"></div>
+            </div>
+            <div class="buttons-set">
+                <p class="back-link"><a href="javascript:void(0);" class="offcanvascheckout_login_link"><small>&laquo; </small><?php echo $this->__('Back to Login') ?></a></p>
+                <button type="button" title="<?php echo $this->__('Submit') ?>" id="btn-forgot" onclick="forgetForm.submit(this)" class="button"><span><span><?php echo $this->__('Submit') ?></span></span></button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            var forgetForm = new VarienForm('forget-form');
+            jQuery(document).ready(function($) {
+                forgetForm.submit = function() {
+                    if(this.validator.validate()){
+                        data = $('#email_address').val();
+                        if(typeof ajax_request !== 'undefined')
+                        ajax_request.abort();
+                        ajax_request = $.ajax({
+                        	type: "POST",
+                        	url: "<?php echo $forgot_url;?>",
+                        	data: 'email='+data,
+                        	cache: false,
+                            beforeSend:  function() {
+                                $('.loading-product-cart').show();
+                                $('.cart-step-content').css('opacity','0.2');
+                                $('.shipping-step-content').css('opacity','0.2');
+                                $('.review-step').css('opacity','0.2');
+                                $('.login-forget').css('opacity','0.2');
+                            },
+                            success: function(html){
+                                $('.loading_image').hide();
+                                $('.cart-step-content').css('opacity','1');
+                                $('.shipping-step-content').css('opacity','1');
+                                $('.review-step').css('opacity','1');
+                                $('.login-forget').css('opacity','1');
+                                var _json = $.parseJSON(html); 
+                                if(_json.success == true){
+                                    $('.forget-message').html(_json.message);
+                                }else{
+                                     $('.forget-message').html(_json.error);
+                                }
+                            }
+                        });
+                    }
+                }.bind(forgetForm);
+            });
+        </script>
+    </div>
+<?php }?>

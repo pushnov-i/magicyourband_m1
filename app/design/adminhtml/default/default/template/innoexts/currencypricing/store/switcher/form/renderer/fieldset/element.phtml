@@ -1,0 +1,44 @@
+<?php
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyPricing
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+?>
+<?php
+$_element = $this->getElement();
+$_note    = $_element->getNote();
+$_trId    = $_element->getHtmlContainerId();
+$_class   = $_element->getFieldsetHtmlClass();
+?>
+<?php if (!$_element->getNoDisplay()): ?>
+<tr<?php if($_trId): ?> id="<?php echo $_trId ?>"<?php endif; ?>>
+    <?php if ($_element->getType()=='hidden'): ?>
+    <td colspan="2" class="hidden"><?php echo trim($_element->getElementHtml()) ?></td>
+    <?php else: ?>
+    <td class="label<?php echo $_class ? " {$_class}-label" : ''?>"><?php echo trim($_element->getLabelHtml()) ?></td>
+    <td class="<?php echo $_element->hasValueClass() ? $_element->getValueClass() : 'value' ?><?php echo $_class ? " {$_class}-value" : ''?>">
+        <div class="store-scope">
+            <?php echo trim($_element->getElementHtml()) ?>
+            <?php echo $this->getHintHtml() ?>
+        </div>
+        <?php if ($_note): ?>
+            <p class="note<?php echo $_class ? " {$_class}-note" : ''?>" id="note_<?php echo $_element->getId()?>"><span><?php echo $_note ?></span></p>
+        <?php endif ?>
+    </td>
+    <?php endif; ?>
+</tr>
+<?php endif; ?>

@@ -1,0 +1,18 @@
+<?php
+$notifications = $this->getNotificationCollection();    
+    foreach($notifications as $notification){?>
+        <p class="title-notification" id="expl-<?php echo $notification->getNotificationId(); ?>" style="cursor: pointer;"><?php echo $notification->getTitle() ?></p>       
+        <div class="content-notification" id="content-expl-<?php echo $notification->getNotificationId() ?>" style="display: none;">
+            <?php print_r(htmlspecialchars_decode(stripslashes($notification->getContentNotification()))); ?>
+        </div>
+<?php }?>
+<script type="text/javascript">
+jQuery( document ).ready(function($) {
+        $('.content-notification').hide();
+        $('.title-notification').click(function()
+        {
+            $('.content-notification').slideUp(600);
+            $(this).next('.content-notification').slideToggle(600);
+        });
+});
+</script>

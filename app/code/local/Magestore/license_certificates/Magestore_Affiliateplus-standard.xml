@@ -1,0 +1,14 @@
+<config>
+   <Magestore_Affiliateplus-standard>
+      <name>Affiliate Plus Standard</name>
+      <type>commercial</type>
+      <activation_date>Sep 16, 2014</activation_date>
+      <expiration_date/>
+      <order_number>800003422</order_number>
+   </Magestore_Affiliateplus-standard>
+   <Magestore_Affiliatepluscoupon>
+      <name>Affiliate Coupon plugin (4.1)</name>
+      <type>depend</type>
+      <depend>Magestore_Affiliateplus-standard</depend>
+   </Magestore_Affiliatepluscoupon>
+</config>

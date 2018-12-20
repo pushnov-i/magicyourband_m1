@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Innoexts
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyGeoFilter
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+-->
+<config>
+    <modules>
+        <Innoexts_CurrencyGeoFilter>
+            <version>1.3.0.0</version>
+        </Innoexts_CurrencyGeoFilter>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Innoexts_CurrencyGeoFilter before="Mage_Adminhtml">Innoexts_CurrencyGeoFilter_Adminhtml</Innoexts_CurrencyGeoFilter>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Innoexts_CurrencyGeoFilter>
+                    <files>
+                        <default>Innoexts_CurrencyGeoFilter.csv</default>
+                    </files>
+                </Innoexts_CurrencyGeoFilter>
+            </modules>
+        </translate>
+        <layout>
+              <updates>
+                  <currencygeofilter>
+                      <file>innoexts/currencygeofilter.xml</file>
+                  </currencygeofilter>
+              </updates>
+        </layout>
+    </adminhtml>
+    <global>
+        <models>
+            <currencygeofilter>
+                <class>Innoexts_CurrencyGeoFilter_Model</class>
+                <resourceModel>currencygeofilter_mysql4</resourceModel>
+            </currencygeofilter>
+            <currencygeofilter_mysql4>
+                <class>Innoexts_CurrencyGeoFilter_Model_Mysql4</class>
+                <entities>
+                    <currency_country>
+                        <table>currencygeofilter_currency_country</table>
+                    </currency_country>
+                </entities>
+            </currencygeofilter_mysql4>
+            <core>
+                <rewrite>
+                    <store>Innoexts_CurrencyGeoFilter_Model_Core_Store</store>
+                </rewrite>
+            </core>
+        </models>
+        <blocks>
+            <currencygeofilter>
+                <class>Innoexts_CurrencyGeoFilter_Block</class>
+            </currencygeofilter>
+        </blocks>
+        <helpers>
+            <currencygeofilter>
+                <class>Innoexts_CurrencyGeoFilter_Helper</class>
+            </currencygeofilter>
+        </helpers>
+        <resources>
+            <currencygeofilter_setup>
+                <setup>
+                    <module>Innoexts_CurrencyGeoFilter</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </currencygeofilter_setup>
+            <currencygeofilter_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </currencygeofilter_write>
+            <currencygeofilter_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </currencygeofilter_read>
+        </resources>
+        <events>
+            
+            <!-- Core -->
+            <controller_front_send_response_before>
+                <observers>
+                    <currencygeofilter_send_response_before>
+                        <class>currencygeofilter/observer</class>
+                        <method>sendResponseBefore</method>
+                    </currencygeofilter_send_response_before>
+                </observers>
+            </controller_front_send_response_before>
+            
+            <!-- Quote -->
+            <sales_quote_address_save_before>
+                <observers>
+                    <currencygeofilter_quote_address_save_before>
+                        <class>currencygeofilter/sales_quote_observer</class>
+                        <method>addressBeforeSave</method>
+                    </currencygeofilter_quote_address_save_before>
+                </observers>
+            </sales_quote_address_save_before>
+            
+        </events>
+    </global>
+    <default>
+        <currency>
+            <geo_filter_options>
+                <active>1</active>
+                <order_readjust>0</order_readjust>
+                <order_readjust_method>shipping</order_readjust_method>
+                <redirect_by_currency>0</redirect_by_currency>
+            </geo_filter_options>
+       </currency>
+    </default>
+</config>

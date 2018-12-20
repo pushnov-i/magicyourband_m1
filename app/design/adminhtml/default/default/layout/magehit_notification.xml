@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><script>magehit_notification/css/colpick.css</script></action>
+            <action method="addJs"><script>magehit_notification/jquery-1.10.2.min.js</script></action>
+            <action method="addJs"><script>magehit_notification/adminhtml/colpick.js</script></action>
+         </reference>
+    </default>
+    <notification_adminhtml_notification_index>
+        <reference name="content">
+            <block type="notification/adminhtml_notification" name="notification" />
+        </reference>
+    </notification_adminhtml_notification_index>
+    <notification_adminhtml_notification_edit>
+        <reference name="head">
+            <action method="setCanLoadExtJs"><flag>1</flag></action>
+            <action method="setCanLoadRulesJs"><flag>1</flag></action>
+        </reference>
+         <update handle="editor"/>
+    </notification_adminhtml_notification_edit>
+</layout>

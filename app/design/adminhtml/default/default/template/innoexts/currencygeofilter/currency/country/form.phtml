@@ -1,0 +1,107 @@
+<?php
+/**
+ * Innoexts
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the InnoExts Commercial License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://innoexts.com/commercial-license-agreement
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@innoexts.com so we can send you a copy immediately.
+ * 
+ * @category    Innoexts
+ * @package     Innoexts_CurrencyGeoFilter
+ * @copyright   Copyright (c) 2014 Innoexts (http://www.innoexts.com)
+ * @license     http://innoexts.com/commercial-license-agreement  InnoExts Commercial License
+ */
+?>
+<?php $helper               = $this->helper('currencygeofilter') ?>
+
+<form name="currencyCountryForm" id="currencyCountryForm" method="post" action="<?php echo $this->getSaveUrl() ?>">
+    <?php echo $this->getBlockHtml('formkey')?>
+    <div class="grid">
+        <table cellspacing="0">
+            <col width="20%"/>
+            <col width="30%"/>
+            <col width="50%"/>
+            <thead>
+                <tr class="headings">
+                    <th>
+                        <strong><?php echo $helper->__('Currency') ?></strong>
+                    </th>
+                    <th>
+                        <strong><?php echo $helper->__('Available Countries') ?></strong>
+                    </th>
+                    <th>
+                        <strong><?php echo $helper->__('Selected Countries') ?></strong>
+                    </th>
+                </tr>
+            </thead>
+            <?php foreach( $this->getCurrencies() as $currency ): ?>
+            <?php $currencyCountries    = $this->getCurrencyCountries($currency) ?>
+            <tr>
+                <td class="a-right">
+                    <strong><?php echo $currency ?></strong>
+                </td>
+                <td class="a-left">
+                    <select id="currency_country_<?php echo $currency ?>" name="currency[<?php echo $currency ?>][]" class="select multiselect" size="7" multiple="multiple">
+                        <?php foreach ($this->getCountries() as $country) : ?>
+                        <option value="<?php echo $country['value'] ?>"<?php if (in_array($country['value'], $currencyCountries)) : ?> selected="selected"<?php endif ?>>
+                        <?php echo $country['label'] ?>
+                        </option>
+                        <?php endforeach ?>
+                    </select>
+                </td>
+                <td class="a-left">
+                    <p id="selected_currency_country_<?php echo $currency ?>">
+                    <?php $countries = array() ?>
+                    <?php foreach ($this->getCountries() as $country) : ?>
+                    <?php if (in_array($country['value'], $currencyCountries)) array_push($countries, $country['label']) ?>
+                    <?php endforeach ?>
+                    <?php echo implode(', ', $countries) ?>
+                    </p>
+                </td>
+            </tr>
+            <?php endforeach ?>
+        </table>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+
+currencyCountryControl = Class.create();
+currencyCountryControl.prototype = {
+    initialize:function(controlId) {
+    	this.control       = $(controlId);
+        if (!this.control) {
+            return;
+        }
+        this.bindElements();
+    }, 
+    bindElements:function() {
+        var elements = Form.getElements(this.control);
+        for (var row in elements) {
+            if (elements[row].id) {
+            	Event.observe(elements[row], 'change', this.elementChange.bind(this));
+            }
+        }
+    }, 
+    elementChange:function(event) {
+    	var element = Event.element(event);
+    	var selectedElement = $('selected_' + element.id);
+    	if (selectedElement.id) {
+            var countries = new Array();
+            for (var i = 0; i < element.options.length; i++) {
+            	if (element.options[i].selected) countries.push(element.options[i].text);
+            }
+            selectedElement.innerHTML = countries.join(', ');
+    	}
+    }
+}
+currencyCountryControl = new currencyCountryControl('currencyCountryForm');
+
+//]]>
+</script>
