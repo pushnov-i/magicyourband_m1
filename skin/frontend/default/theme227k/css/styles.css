@@ -3054,5 +3054,7 @@ img { max-width:100%; }
 #control_window_2 .lcontainer {height: 605px !important;}
 #control_window_2 .lcontainer iframe {  height: 518px; padding: 7px;}
 
-
+.mw-ost-review-ct .cart .discount h2 {
+	width: 38%;
+}
 /* PS End */
