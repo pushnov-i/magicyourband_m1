@@ -91,22 +91,6 @@ Available logo types can be assigned with action="setLogoType":
  - shopNowUsing_150x60
  - shopNowUsing_150x40
 -->
-    <catalog_product_view>
-        <reference name="product.info.addtocart">
-            <block type="page/html_wrapper" name="product.info.addtocart.paypal.wrapper" translate="label">
-                <label>PayPal Express Checkout Shortcut Wrapper</label>
-                <block type="paypal/express_shortcut" name="product.info.addtocart.paypal" template="paypal/express/shortcut.phtml">
-                    <action method="setIsInCatalogProduct"><value>1</value></action>
-                </block>
-            </block>
-        </reference>
-        <update handle="SHORTCUT_popup" />
-        <reference name="footer">
-            <block type="paypal/logo" name="paypal.partner.right.logo" template="paypal/partner/logo.phtml">
-                <!--action method="setLogoType"><value>wePrefer_150x60</value></action-->
-            </block>
-        </reference>
-    </catalog_product_view>
 
     <catalog_category_default>
         <update handle="SHORTCUT_popup" />
