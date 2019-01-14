@@ -7,3 +7,7 @@
 .vkCustomizeIt span{
 	background: #ff773b;
 }
+.vkCustomizeIt:hover span
+{
+	background: #6cc957;
+}
