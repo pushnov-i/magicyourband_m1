@@ -126,6 +126,17 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
         //echo "<pre>";
         //print_r($this->_totals); exit;
         //$this->_salesEntity->getId(); exit;
+
+        // regular items from the sales entity
+        $this->_items = array();
+        foreach ($this->_salesEntity->getAllItems() as $item) {
+            if (!$item->getParentItem()) {
+                $this->_addRegularItem($item);
+            }
+        }
+        end($this->_items);
+        $lastRegularItemKey = key($this->_items);
+
         if ($this->_salesEntity instanceof Mage_Sales_Model_Order) {
             $shippingDescription = $this->_salesEntity->getShippingDescription();
             foreach ($this->_totals as $key => $value) {
@@ -172,6 +183,46 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 }
             }
         }
+
+
+        $originalDiscount = $this->_totals[self::TOTAL_DISCOUNT];
+
+        // arbitrary items, total modifications
+        Mage::dispatchEvent('paypal_prepare_line_items', array('paypal_cart' => $this));
+
+        // distinguish original discount among the others
+        if ($originalDiscount > 0.0001 && isset($this->_totalLineItemDescriptions[self::TOTAL_DISCOUNT])) {
+            $this->_totalLineItemDescriptions[self::TOTAL_DISCOUNT][] = Mage::helper('sales')->__('Discount (%s)', Mage::app()->getStore()->convertPrice($originalDiscount, true, false));
+        }
+
+        // discount, shipping as items
+        if ($this->_isDiscountAsItem && $this->_totals[self::TOTAL_DISCOUNT]) {
+            $this->addItem(Mage::helper('paypal')->__('Discount'), 1, -1.00 * $this->_totals[self::TOTAL_DISCOUNT],
+                $this->_renderTotalLineItemDescriptions(self::TOTAL_DISCOUNT)
+            );
+        }
+        $shippingItemId = $this->_renderTotalLineItemDescriptions(self::TOTAL_SHIPPING, $shippingDescription);
+        if ($this->_isShippingAsItem && (float)$this->_totals[self::TOTAL_SHIPPING]) {
+            $this->addItem(Mage::helper('paypal')->__('Shipping'), 1, (float)$this->_totals[self::TOTAL_SHIPPING],
+                $shippingItemId
+            );
+        }
+
+        // compound non-regular items into subtotal
+        foreach ($this->_items as $key => $item) {
+            if ($key > $lastRegularItemKey && $item->getAmount() != 0) {
+                $this->_totals[self::TOTAL_SUBTOTAL] += $item->getAmount();
+            }
+        }
+
+        $this->_validate();
+        // if cart items are invalid, prepare cart for transfer without line items
+        if (!$this->_areItemsValid) {
+            $this->removeItem($shippingItemId);
+        }
+
+        $this->_shouldRender = false;
+
        
     }
 

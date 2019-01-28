@@ -53,6 +53,8 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
             return;
         }
         //$this->_cart->setTransferDiscountAsItem();
+        $this->_cart->isDiscountAsItem(true);
+
         return $this->_exportLineItemsCustom($request, $i);
     }
 
@@ -63,7 +65,7 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
 
         if(isset($request['AMT']) && isset($request['CURRENCYCODE'])){
             if($request['CURRENCYCODE'] != Mage::helper('multicurrency')->getToCurrency()){
-                $request['AMT'] = $this->_cart->getMulticurrencyTotal(); 
+                $request['AMT'] = $this->_cart->getMulticurrencyTotal();
                 $request['CURRENCYCODE'] = Mage::helper('multicurrency')->getToCurrency();
                 $multicurrencyObj = Mage::getModel('elsner_multicurrency/multicurrency')->addRow($request['INVNUM'],$request['CURRENCYCODE'],'Authorize');
             }
