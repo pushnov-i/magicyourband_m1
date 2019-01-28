@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Elsner_Multicurrency>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Paypal/>
+
+            </depends>
+        </Elsner_Multicurrency>
+    </modules>
+</config>
