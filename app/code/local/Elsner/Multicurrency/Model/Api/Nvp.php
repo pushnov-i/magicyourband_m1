@@ -3,51 +3,9 @@
 class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
 {
 
-	protected function _exportLineItemsCustom(array &$request, $i = 0)
-    {
-        if (!$this->_cart) {
-            return;
-        }
 
-        // always add cart totals, even if line items are not requested
-        if ($this->_lineItemTotalExportMap) {
-            foreach ($this->_cart->getTotals() as $key => $total) {
-                if (isset($this->_lineItemTotalExportMap[$key])) { // !empty($total)
-                    $privateKey = $this->_lineItemTotalExportMap[$key];
-                    $request[$privateKey] = $this->_filterAmount($total);
-                }
-            }
-        }
 
-        // add cart line items
-        $items = $this->_cart->getItems();
-        if (empty($items) || !$this->getIsLineItemsEnabled()) {
-            return;
-        }
-        $result = null;
-        foreach ($items as $item) {
-            foreach ($this->_lineItemExportItemsFormat as $publicKey => $privateFormat) {
-                $result = true;
-                $value = $item->getDataUsingMethod($publicKey);
-                /*if($publicKey == 'amount' && is_object($item->getName()) !== true){
-                   echo $value; exit;
-                   $value = Mage::helper('multicurrency')->getExchangeRate($value);
-                }*/
-                if (isset($this->_lineItemExportItemsFilters[$publicKey])) {
-                    $callback   = $this->_lineItemExportItemsFilters[$publicKey];
-                    $value = call_user_func(array($this, $callback), $value);
-                }
-                if (is_float($value)) {
-                    $value = $this->_filterAmount($value);
-                }
-                $request[sprintf($privateFormat, $i)] = $value;
-            }
-            $i++;
-        }
-        return $result;
-    }
-
-	protected function _exportLineItems(array &$request, $i = 0)
+	/*protected function _exportLineItems(array &$request, $i = 0)
     {
         if (!$this->_cart) {
             return;
@@ -56,7 +14,7 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
         $this->_cart->isDiscountAsItem(true);
 
         return $this->_exportLineItemsCustom($request, $i);
-    }
+    }*/
 
 	public function callSetExpressCheckout()
     {
@@ -64,12 +22,15 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
         $request = $this->_exportToRequest($this->_setExpressCheckoutRequest);
 
         if(isset($request['AMT']) && isset($request['CURRENCYCODE'])){
+
             if($request['CURRENCYCODE'] != Mage::helper('multicurrency')->getToCurrency()){
                 $request['AMT'] = $this->_cart->getMulticurrencyTotal();
                 $request['CURRENCYCODE'] = Mage::helper('multicurrency')->getToCurrency();
                 $multicurrencyObj = Mage::getModel('elsner_multicurrency/multicurrency')->addRow($request['INVNUM'],$request['CURRENCYCODE'],'Authorize');
             }
+
         }
+
         $this->_exportLineItems($request);
 
         // import/suppress shipping address, if any
@@ -91,7 +52,14 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
             $request["L_BILLINGAGREEMENTDESCRIPTION{$i}"] = $profile->getScheduleDescription();
             $i++;
         }
+        if(isset($request['AMT'])) {
+            $request['ITEMAMT'] = $request['AMT'];
+        }
+echo '<pre>';
+        print_r($request);
+        echo '</pre>'; die;
 
+        
         $response = $this->call(self::SET_EXPRESS_CHECKOUT, $request);
         $this->_importFromResponse($this->_setExpressCheckoutResponse, $response);
     }

@@ -25,7 +25,7 @@
                     <api_nvp>Elsner_Multicurrency_Model_Api_Nvp</api_nvp>
                     <standard>Elsner_Multicurrency_Model_Standard</standard>
                     <config>Elsner_Multicurrency_Model_Config</config>
-                    <!-- <express_checkout>Elsner_Multicurrency_Model_Express_Checkout</express_checkout> -->
+                    <express_checkout>Elsner_Multicurrency_Model_Express_Checkout</express_checkout>
                     <!-- <express>Elsner_Multicurrency_Model_Express</express> -->
                     <!-- <pro>Elsner_Multicurrency_Model_Pro</pro> -->
                 </rewrite>

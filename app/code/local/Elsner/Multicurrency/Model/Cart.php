@@ -14,7 +14,10 @@ class Elsner_Multicurrency_Model_Cart extends Mage_Paypal_Model_Cart
     public function addItem($name, $qty, $amount, $identifier = null)
     {
         $this->_shouldRender = true;
-        $amount = Mage::helper('multicurrency')->getExchangeRate($amount);
+        if($name != 'Discount') {
+            $amount = Mage::helper('multicurrency')->getExchangeRate($amount);
+        }
+
         $item = new Varien_Object(array(
             'name'   => $name,
             'qty'    => $qty,
@@ -120,9 +123,22 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
         $this->_areItemsValid = $this->_areItemsValid && $this->_areTotalsValid;
     }
 
+    /**
+     * Render and get line items
+     * By default returns false if the items are invalid
+     *
+     * @param bool $bypassValidation
+     * @return array|false
+     */
+    public function getItems($bypassValidation = false)
+    {
+        $this->_render();
+        return $this->_items;
+    }
+
     protected function _render()
     {
-        parent::_render();
+        //parent::_render();
         //echo "<pre>";
         //print_r($this->_totals); exit;
         //$this->_salesEntity->getId(); exit;
@@ -134,13 +150,11 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 $this->_addRegularItem($item);
             }
         }
-        end($this->_items);
-        $lastRegularItemKey = key($this->_items);
 
         if ($this->_salesEntity instanceof Mage_Sales_Model_Order) {
             $shippingDescription = $this->_salesEntity->getShippingDescription();
             foreach ($this->_totals as $key => $value) {
-            //$this->_totals[$key] = Mage::helper('multicurrency')->getExchangeRate($this->_totals[$key]);
+                //$this->_totals[$key] = Mage::helper('multicurrency')->getExchangeRate($this->_totals[$key]);
                 if(Mage::helper('multicurrency')->getToCurrency() == $this->_salesEntity->getOrderCurrencyCode()){
                     if($key == self::TOTAL_SUBTOTAL){
                         $this->_totals[$key] = $this->_salesEntity->getSubtotal();
@@ -152,11 +166,11 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                         $this->_totals[$key] = abs($this->_salesEntity->getDiscountAmount());
                     }
                 }else{
-                   $this->_totals[$key] = Mage::helper('multicurrency')->getConvertedAmount($this->_totals[$key]);
+                    $this->_totals[$key] = Mage::helper('multicurrency')->getConvertedAmount($this->_totals[$key]);
                 }
             }
         } else {
-    
+
             $address = $this->_salesEntity->getIsVirtual() ?
                 $this->_salesEntity->getBillingAddress() : $this->_salesEntity->getShippingAddress();
             $shippingDescription = $address->getShippingDescription();
@@ -167,7 +181,7 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 self::TOTAL_DISCOUNT => abs($address->getBaseDiscountAmount()),
             );
             foreach ($this->_totals as $key => $value) {
-            //$this->_totals[$key] = Mage::helper('multicurrency')->getExchangeRate($this->_totals[$key]);
+                //$this->_totals[$key] = Mage::helper('multicurrency')->getExchanFgeRate($this->_totals[$key]);
                 if(Mage::helper('multicurrency')->getToCurrency() == $this->_salesEntity->getQuoteCurrencyCode()){
                     if($key == self::TOTAL_SUBTOTAL){
                         $this->_totals[$key] = $this->_salesEntity->getSubtotal();
@@ -195,8 +209,11 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
             $this->_totalLineItemDescriptions[self::TOTAL_DISCOUNT][] = Mage::helper('sales')->__('Discount (%s)', Mage::app()->getStore()->convertPrice($originalDiscount, true, false));
         }
 
+
+
         // discount, shipping as items
         if ($this->_isDiscountAsItem && $this->_totals[self::TOTAL_DISCOUNT]) {
+
             $this->addItem(Mage::helper('paypal')->__('Discount'), 1, -1.00 * $this->_totals[self::TOTAL_DISCOUNT],
                 $this->_renderTotalLineItemDescriptions(self::TOTAL_DISCOUNT)
             );
@@ -208,12 +225,8 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
             );
         }
 
-        // compound non-regular items into subtotal
-        foreach ($this->_items as $key => $item) {
-            if ($key > $lastRegularItemKey && $item->getAmount() != 0) {
-                $this->_totals[self::TOTAL_SUBTOTAL] += $item->getAmount();
-            }
-        }
+
+
 
         $this->_validate();
         // if cart items are invalid, prepare cart for transfer without line items
@@ -223,7 +236,40 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
 
         $this->_shouldRender = false;
 
-       
+        Mage::dispatchEvent('paypal_prepare_line_items', array('paypal_cart' => $this));
+
+
+    }
+
+
+    public function getTotals($mergeDiscount = false)
+    {
+        $this->_render();
+        if($this->_totals[self::TOTAL_DISCOUNT]) {
+            $this->_totals[self::TOTAL_SUBTOTAL] = $this->_totals[self::TOTAL_SUBTOTAL] - abs($this->_totals[self::TOTAL_DISCOUNT]);
+        }
+        // cut down totals to one total if they are invalid
+        if (!$this->_areTotalsValid) {
+            $totals = array(self::TOTAL_SUBTOTAL =>
+                $this->_totals[self::TOTAL_SUBTOTAL] + $this->_totals[self::TOTAL_TAX]
+            );
+            if (!$this->_isShippingAsItem) {
+                $totals[self::TOTAL_SUBTOTAL] += $this->_totals[self::TOTAL_SHIPPING];
+            }
+            if (!$this->_isDiscountAsItem) {
+                $totals[self::TOTAL_SUBTOTAL] -= $this->_totals[self::TOTAL_DISCOUNT];
+            }
+            return $totals;
+        } elseif ($mergeDiscount) {
+            $totals = $this->_totals;
+            unset($totals[self::TOTAL_DISCOUNT]);
+            if (!$this->_isDiscountAsItem) {
+                $totals[self::TOTAL_SUBTOTAL] -= $this->_totals[self::TOTAL_DISCOUNT];
+            }
+            return $totals;
+        }
+
+        return $this->_totals;
     }
 
     public function getMulticurrencyTotal()
@@ -244,6 +290,40 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 return $amount;
             }
         }
+    }
+
+    /**
+     * Add a usual line item with amount and qty
+     *
+     * @param Varien_Object $salesItem
+     * @return Varien_Object
+     */
+    protected function _addRegularItem(Varien_Object $salesItem)
+    {
+        if ($this->_salesEntity instanceof Mage_Sales_Model_Order) {
+            $qty = (int) $salesItem->getQtyOrdered();
+            $amount = (float) $salesItem->getBasePrice();
+            // TODO: nominal item for order
+        } else {
+            $qty = (int) $salesItem->getTotalQty();
+            $amount = $salesItem->isNominal() ? 0 : (float) $salesItem->getBaseCalculationPrice();
+        }
+        // workaround in case if item subtotal precision is not compatible with PayPal (.2)
+        $subAggregatedLabel = '';
+        if ($amount - round($amount, 2)) {
+            $amount = $amount * $qty;
+            $subAggregatedLabel = ' x' . $qty;
+            $qty = 1;
+        }
+
+        // aggregate item price if item qty * price does not match row total
+        /*if (($amount * $qty) != $salesItem->getBaseRowTotal()) {
+            $amount = (float) $salesItem->getBaseRowTotal();
+            $subAggregatedLabel = ' x' . $qty;
+            $qty = 1;
+        }*/
+
+        return $this->addItem($salesItem->getName() . $subAggregatedLabel, $qty, $amount, $salesItem->getSku());
     }
 
 }
