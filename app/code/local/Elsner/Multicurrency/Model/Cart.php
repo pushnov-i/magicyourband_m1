@@ -170,7 +170,6 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 }
             }
         } else {
-
             $address = $this->_salesEntity->getIsVirtual() ?
                 $this->_salesEntity->getBillingAddress() : $this->_salesEntity->getShippingAddress();
             $shippingDescription = $address->getShippingDescription();
@@ -197,7 +196,6 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 }
             }
         }
-
 
         $originalDiscount = $this->_totals[self::TOTAL_DISCOUNT];
 
@@ -228,7 +226,7 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
 
 
 
-        $this->_validate();
+        //$this->_validate();
         // if cart items are invalid, prepare cart for transfer without line items
         if (!$this->_areItemsValid) {
             $this->removeItem($shippingItemId);
@@ -245,9 +243,11 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
     public function getTotals($mergeDiscount = false)
     {
         $this->_render();
+
         if($this->_totals[self::TOTAL_DISCOUNT]) {
-            $this->_totals[self::TOTAL_SUBTOTAL] = $this->_totals[self::TOTAL_SUBTOTAL] - abs($this->_totals[self::TOTAL_DISCOUNT]);
+            $this->_totals[self::TOTAL_SUBTOTAL] = $this->_totals[self::TOTAL_SUBTOTAL] - round(abs($this->_totals[self::TOTAL_DISCOUNT]), 2);
         }
+
         // cut down totals to one total if they are invalid
         if (!$this->_areTotalsValid) {
             $totals = array(self::TOTAL_SUBTOTAL =>

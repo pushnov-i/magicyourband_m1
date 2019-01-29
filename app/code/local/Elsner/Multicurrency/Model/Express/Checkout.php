@@ -273,9 +273,8 @@ class Elsner_Multicurrency_Model_Express_Checkout
         $this->_quote->reserveOrderId()->save();
         // prepare API
         $this->_getApi();
-            $a = Mage::helper('multicurrency')->getConvertedAmount($this->_quote->getBaseGrandTotal()) - 0.01;
 
-        $this->_api->setAmount($a)
+        $this->_api->setAmount($this->_quote->getGrandTotal())
             ->setCurrencyCode(Mage::helper('multicurrency')->getToCurrency())
             ->setInvNum($this->_quote->getReservedOrderId())
             ->setReturnUrl($returnUrl)
