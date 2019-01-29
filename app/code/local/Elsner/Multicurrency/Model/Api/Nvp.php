@@ -78,10 +78,16 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
             $request['AMT'] = $this->_cart->getMulticurrencyTotal();
             $request['CURRENCYCODE'] = Mage::helper('multicurrency')->getToCurrency(); 
         }
+
         $this->_exportLineItems($request);
+        if ($this->getAddress()) {
+            $request = $this->_importAddresses($request);
+            $request['ADDROVERRIDE'] = 1;
+        }
         if(isset($request['AMT'])) {
             $request['ITEMAMT'] = $request['AMT'];
         }
+        //echo '<pre>'; print_r($request); echo '</pre>'; die;
         $response = $this->call(self::DO_EXPRESS_CHECKOUT_PAYMENT, $request);
         $this->_importFromResponse($this->_paymentInformationResponse, $response);
         $this->_importFromResponse($this->_doExpressCheckoutPaymentResponse, $response);

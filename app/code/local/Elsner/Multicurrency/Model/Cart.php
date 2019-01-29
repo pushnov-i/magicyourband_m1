@@ -153,6 +153,12 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
 
         if ($this->_salesEntity instanceof Mage_Sales_Model_Order) {
             $shippingDescription = $this->_salesEntity->getShippingDescription();
+            $this->_totals = array (
+                self::TOTAL_SUBTOTAL => $this->_salesEntity->getSubtotal(),
+                self::TOTAL_TAX      => $this->_salesEntity->getTaxAmount(),
+                self::TOTAL_SHIPPING => $this->_salesEntity->getShippingAmount(),
+                self::TOTAL_DISCOUNT => abs($this->_salesEntity->getDiscountAmount())
+            );
             foreach ($this->_totals as $key => $value) {
                 //$this->_totals[$key] = Mage::helper('multicurrency')->getExchangeRate($this->_totals[$key]);
                 if(Mage::helper('multicurrency')->getToCurrency() == $this->_salesEntity->getOrderCurrencyCode()){
@@ -196,7 +202,6 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 }
             }
         }
-
         $originalDiscount = $this->_totals[self::TOTAL_DISCOUNT];
 
         // arbitrary items, total modifications
