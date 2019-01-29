@@ -55,9 +55,9 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
         if(isset($request['AMT'])) {
             $request['ITEMAMT'] = $request['AMT'];
         }
-echo '<pre>';
+/*echo '<pre>';
         print_r($request);
-        echo '</pre>'; die;
+        echo '</pre>'; die;*/
 
         
         $response = $this->call(self::SET_EXPRESS_CHECKOUT, $request);
