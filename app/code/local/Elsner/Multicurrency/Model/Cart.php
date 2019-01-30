@@ -119,7 +119,6 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
         } else {
             $this->_areTotalsValid = $itemsSubtotal > 0.00001;
         }
-
         $this->_areItemsValid = $this->_areItemsValid && $this->_areTotalsValid;
     }
 
@@ -252,7 +251,7 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
         if($this->_totals[self::TOTAL_DISCOUNT]) {
             $this->_totals[self::TOTAL_SUBTOTAL] = $this->_totals[self::TOTAL_SUBTOTAL] - round(abs($this->_totals[self::TOTAL_DISCOUNT]), 2);
         }
-
+        $this->_areTotalsValid = true;
         // cut down totals to one total if they are invalid
         if (!$this->_areTotalsValid) {
             $totals = array(self::TOTAL_SUBTOTAL =>
