@@ -30,49 +30,6 @@ class Elsner_Multicurrency_Model_Cart extends Mage_Paypal_Model_Cart
         return $item;
     }
 
-    /**
-     * Check the line items and totals according to PayPal business logic limitations
-     */
-    /*protected function _validate()
-    {
-        $this->_areItemsValid = true;
-        $this->_areTotalsValid = true;
-
-        //$referenceAmount = $this->_salesEntity->getBaseGrandTotal();
-        $referenceAmount = Mage::helper('multicurrency')->getExchangeRate($this->_salesEntity->getBaseGrandTotal());
-        $itemsSubtotal = 0;
-        foreach ($this->_items as $i) {
-            $itemsSubtotal = $itemsSubtotal + $i['qty'] * $i['amount'];
-        }
-        $sum = $itemsSubtotal + $this->_totals[self::TOTAL_TAX];
-        if (!$this->_isShippingAsItem) {
-            $sum += $this->_totals[self::TOTAL_SHIPPING];
-        }
-        if (!$this->_isDiscountAsItem) {
-	    $discountAmount = Mage::helper('multicurrency')->getExchangeRate($this->_totals[self::TOTAL_DISCOUNT]);
-            $sum -= $discountAmount;
-//            $sum -= $this->_totals[self::TOTAL_DISCOUNT];
-        }
-
-       
-	Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($sum);
-	Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($referenceAmount);
-        if (sprintf('%.4F', $sum) == sprintf('%.4F', $referenceAmount)) {
-            $this->_areItemsValid = true;
-        }
-
-        // PayPal requires to have discount less than items subtotal
-        if (!$this->_isDiscountAsItem) {
-            $this->_areTotalsValid = round($discountAmount, 4) < round($itemsSubtotal, 4);
-        } else {
-            $this->_areTotalsValid = $itemsSubtotal > 0.00001;
-        }
-	Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_areTotalsValid );
-Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_areItemsValid);
-Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_totals);
-
-        $this->_areItemsValid = $this->_areItemsValid && $this->_areTotalsValid;
-    }*/
 
     protected function _validate()
     {
@@ -149,7 +106,6 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 $this->_addRegularItem($item);
             }
         }
-
         if ($this->_salesEntity instanceof Mage_Sales_Model_Order) {
             $shippingDescription = $this->_salesEntity->getShippingDescription();
             $this->_totals = array (
@@ -201,6 +157,7 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
                 }
             }
         }
+
         $originalDiscount = $this->_totals[self::TOTAL_DISCOUNT];
 
         // arbitrary items, total modifications
@@ -213,27 +170,18 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
 
 
 
-        // discount, shipping as items
-        if ($this->_isDiscountAsItem && $this->_totals[self::TOTAL_DISCOUNT]) {
-
             $this->addItem(Mage::helper('paypal')->__('Discount'), 1, -1.00 * $this->_totals[self::TOTAL_DISCOUNT],
                 $this->_renderTotalLineItemDescriptions(self::TOTAL_DISCOUNT)
             );
-        }
+
+
+
+
         $shippingItemId = $this->_renderTotalLineItemDescriptions(self::TOTAL_SHIPPING, $shippingDescription);
         if ($this->_isShippingAsItem && (float)$this->_totals[self::TOTAL_SHIPPING]) {
             $this->addItem(Mage::helper('paypal')->__('Shipping'), 1, (float)$this->_totals[self::TOTAL_SHIPPING],
                 $shippingItemId
             );
-        }
-
-
-
-
-        //$this->_validate();
-        // if cart items are invalid, prepare cart for transfer without line items
-        if (!$this->_areItemsValid) {
-            $this->removeItem($shippingItemId);
         }
 
         $this->_shouldRender = false;
@@ -246,8 +194,8 @@ Mage::getModel('core/log_adapter', 'payment_paypal_standard.log')->log($this->_t
 
     public function getTotals($mergeDiscount = false)
     {
-        $this->_render();
 
+        $this->_render();
         if($this->_totals[self::TOTAL_DISCOUNT]) {
             $this->_totals[self::TOTAL_SUBTOTAL] = $this->_totals[self::TOTAL_SUBTOTAL] - round(abs($this->_totals[self::TOTAL_DISCOUNT]), 2);
         }
