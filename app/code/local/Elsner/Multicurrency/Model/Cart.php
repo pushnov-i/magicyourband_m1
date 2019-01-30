@@ -24,6 +24,7 @@ class Elsner_Multicurrency_Model_Cart extends Mage_Paypal_Model_Cart
             'amount' => (float)$amount,
         ));
         if ($identifier) {
+            $identifier = substr($identifier,0,100);
             $item->setData('id', $identifier);
         }
         $this->_items[] = $item;
