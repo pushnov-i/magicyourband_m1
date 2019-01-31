@@ -632,6 +632,12 @@
 	.top-icon-menu {min-width: 320px;}
 	
 	.banner h2 { font-size:13px; }
+	.add-to-cart button.button > span {
+		font-size: 14px !important;
+	}
+	button.button span span {
+		padding: 0px 8px !important;
+	}
 }
 @media only screen and (max-width: 340px) { 
 	.cart .data-table tfoot button.button {margin-left: 30px; margin-right: 30px;}	
