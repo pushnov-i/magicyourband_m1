@@ -26,6 +26,32 @@
 ?>
 <?php
     $_item = $this->getItem();
+$product = $_item->getProduct();
+$productOptions = $product->getOptions();
+$options = $this->getOptionList();
+
+$productThumbnail = false;
+if ($productOptions && $options) {
+
+    foreach($options as $option) {
+        if (	isset($productOptions[$option['option_id']])
+            &&	$productOptions[$option['option_id']]->getSku() == "thumburl"
+        ) {
+            $productThumbnail = $option['value'];
+            break;
+        }
+    }
+}
+
+if ($productThumbnail) {
+    $thumbnailImageUrl = $productThumbnail;
+    $fullImageUrl = $productThumbnail;
+} else {
+    $p = Mage::getModel('catalog/product')->load($product->getId());
+    $thumbnailImageUrl = (string) Mage::helper('catalog/image')->init($p, 'thumbnail')->resize(75);
+    $fullImageUrl = (string) Mage::helper('catalog/image')->init($p, 'image')->resize(500);
+}
+
     $isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
     $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
 ?>
@@ -37,7 +63,14 @@
 			<?php endif ?>
 	</div>
     <?php if ($this->hasProductUrl()): ?>
-        <a href="<?php echo $this->getProductUrl()?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image"><img src="<?php echo $this->getProductThumbnail()->resize(90, 90)->setWatermarkSize('30x10'); ?>" alt="<?php echo $this->escapeHtml($this->getProductName()) ?>" /></a>
+        <a href="<?php echo $this->getProductUrl()?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image">
+            <img src="<?php echo $thumbnailImageUrl ?>"
+                 width="90px"
+                 fullImgSrc="<?php echo $fullImageUrl ?>"
+                 alt="<?php echo $title ?>"
+                 title="<?php echo $title ?>"
+            />
+        </a>
     <?php else: ?>
         <span class="product-image"><img src="<?php echo $this->getProductThumbnail()->resize(90, 90)->setWatermarkSize('30x10'); ?>" alt="<?php echo $this->escapeHtml($this->getProductName()) ?>" /></span>
     <?php endif; ?>

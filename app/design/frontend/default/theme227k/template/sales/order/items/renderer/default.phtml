@@ -24,8 +24,47 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php $_item = $this->getItem() ?>
+<?php $_item = $this->getItem();
+$product = $_item->getProduct();
+
+$productOptions = $product->getOptions();
+$options = $this->getItemOptions();
+
+$productThumbnail = false;
+if ($productOptions && $options) {
+    foreach($options as $option) {
+        if (	isset($productOptions[$option['option_id']])
+            &&	$productOptions[$option['option_id']]->getSku() == "thumburl"
+        ) {
+            $productThumbnail = $option['value'];
+            break;
+        }
+    }
+}
+
+if ($productThumbnail) {
+    $thumbnailImageUrl = $productThumbnail;
+    $fullImageUrl = $productThumbnail;
+} else {
+    $p = Mage::getModel('catalog/product')->load($product->getId());
+    $thumbnailImageUrl = (string) Mage::helper('catalog/image')->init($p, 'thumbnail')->resize(75);
+    $fullImageUrl = (string) Mage::helper('catalog/image')->init($p, 'image')->resize(500);
+}
+
+
+
+?>
 <tr class="border" id="order-item-row-<?php echo $_item->getId() ?>">
+    <td style="text-align: center;" class="vkCartImagePopup-thumb">
+        <img src="<?php echo $thumbnailImageUrl ?>"
+             width="180px"
+             fullImgSrc="<?php echo $fullImageUrl ?>"
+             alt="<?php echo $title ?>"
+             title="<?php echo $title ?>"
+        />
+    </td>
+
+
     <td class="order-product-name"><h3 class="product-name"><?php echo $this->escapeHtml($_item->getName()) ?></h3>
         <!--
         <?php if($_options = $this->getItemOptions()): ?>
