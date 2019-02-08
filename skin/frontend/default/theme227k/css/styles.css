@@ -779,7 +779,7 @@ tr.summary-details-excluded { font-style:italic; }
 .block-cart-header .btn-remove,
 .block-cart-header .btn-edit { float:right; margin: 0 5px 0 0;  }
 .block-cart-header .truncated {display:none;}
-.block-cart-header .cart-content{ position:absolute; right:0; top:46px; z-index:9; min-width:280px; width: 100%; display:none; cursor:default;}
+.block-cart-header .cart-content{ position:absolute; right:0; top:46px; z-index:9; min-width:270px; width: 100%; display:none; cursor:default;}
 .block-cart-header .empty .cart-content {
 	background:#ffaa22; 
 	padding:10px;
