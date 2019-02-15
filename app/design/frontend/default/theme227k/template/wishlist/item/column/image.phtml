@@ -27,7 +27,40 @@
 /* @var Mage_Wishlist_Model_Item $item */
 $item = $this->getItem();
 $product = $item->getProduct();
+
+$productOptions = $product->getOptions();
+
+$options = $item->getOptions();
+
+
+
+$productThumbnail = false;
+if ($productOptions && $options) {
+
+    foreach($options as $option) {
+        $option = unserialize( $option->getData('value') )['options'];
+
+        foreach ($option as $key => $value) {
+            if (	isset($productOptions[$key])
+                &&	$productOptions[$key]->getSku() == "thumburl"
+            ) {
+                $productThumbnail = $value;
+                break;
+            }
+        }
+
+    }
+}
+
+if ($productThumbnail) {
+    $thumbnailImageUrl = $productThumbnail;
+    $fullImageUrl = $productThumbnail;
+} else {
+    $p = Mage::getModel('catalog/product')->load($product->getId());
+    $thumbnailImageUrl = (string) Mage::helper('catalog/image')->init($p, 'thumbnail')->resize(75);
+    $fullImageUrl = (string) Mage::helper('catalog/image')->init($p, 'small_image')->resize(200);
+}
 ?>
 <a class="product-image" href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>">
-    <img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(200); ?>" width="200" height="200" alt="<?php echo $this->escapeHtml($product->getName()) ?>" />
+    <img src="<?php echo $fullImageUrl; ?>"      alt="<?php echo $this->escapeHtml($product->getName()) ?>" />
 </a>

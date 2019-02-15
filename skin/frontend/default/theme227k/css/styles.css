@@ -2271,7 +2271,7 @@ tr.summary-details-excluded { font-style:italic; }
 #wishlist-view-form #wishlist-table a {display:inline-block; margin-bottom:5px;}
 #wishlist-view-form #wishlist-table .cart-cell a {float: left; clear: left;}
 #wishlist-view-form #wishlist-table .cart-cell .old-price {float: left; clear: left;}
-#wishlist-view-form #wishlist-table .product-image img {height:100px;width:100px;}
+#wishlist-view-form #wishlist-table .product-image img {width:200px;}
 #wishlist-view-form #wishlist-table p,
 #wishlist-view-form #wishlist-table button.button {padding:0;margin-bottom:10px;}
 #wishlist-view-form .buttons-set.buttons-set2 {text-align: center;}
