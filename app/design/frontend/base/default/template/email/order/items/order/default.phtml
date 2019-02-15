@@ -49,7 +49,7 @@ endif; ?>
 
 <tr>
     <td align="left" valign="top" style="padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
-        <img src="<?php echo isset($print_image) ? $print_image : $mediaModel->getMediaUrl($_item->getProduct()->getThumbnail()) ?>" width="135" height="135" alt="<?php echo $_item->getName() ?>" />
+        <img src="<?php echo isset($print_image) ? $print_image : $mediaModel->getMediaUrl($_item->getProduct()->getThumbnail()) ?>" width="135" alt="<?php echo $_item->getName() ?>" />
     </td>
     <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
         <strong style="font-size:11px;"><?php echo $this->escapeHtml($_item->getName()) ?></strong>
