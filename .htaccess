@@ -146,9 +146,6 @@ RewriteEngine On
 RewriteCond %{HTTP_USER_AGENT} ^(baidu|ahrefs|semrush|xovibot|360Spider|dotbot|genieo|megaindex.ru|vagabondo|yandexbot|yelpspider|fatbot|tineye|blexbot|ascribebot|ia_archiver|moatbot|mixrankbot|orangebot|yoozbot|mj12bot|paperlibot|showyoubot|grapeshot|WeSee|haosouspider|spider|lexxebot|nutch) [NC]  
 RewriteRule .* - [F,L]
 
-RewriteCond %{HTTP:X-Forwarded-Proto} !https
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 ############################################
 ## enable rewrites
 

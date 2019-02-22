@@ -3061,3 +3061,7 @@ img { max-width:100%; }
 	width: 38%;
 }
 /* PS End */
+div.mw-osc-column-2{
+	position: relative;
+	z-index: 10;
+}
