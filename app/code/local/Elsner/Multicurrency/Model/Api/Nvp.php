@@ -53,7 +53,8 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
             $i++;
         }
         if(isset($request['AMT'])) {
-            $request['ITEMAMT'] = $request['AMT'];
+//            $request['ITEMAMT'] = $request['AMT'];
+$request['ITEMAMT'] = $request['AMT'] - $request['SHIPPINGAMT'];
         }
 
         
@@ -85,7 +86,8 @@ class Elsner_Multicurrency_Model_Api_Nvp extends Mage_Paypal_Model_Api_Nvp
             $request['ADDROVERRIDE'] = 1;
         }
         if(isset($request['AMT'])) {
-            $request['ITEMAMT'] = $request['AMT'];
+//            $request['ITEMAMT'] = $request['AMT'];
+$request['ITEMAMT'] = $request['AMT'] - $request['SHIPPINGAMT'];
         }
         //echo '<pre>'; print_r($request); echo '</pre>'; die;
         $response = $this->call(self::DO_EXPRESS_CHECKOUT_PAYMENT, $request);
