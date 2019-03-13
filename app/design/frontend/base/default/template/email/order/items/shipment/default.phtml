@@ -27,7 +27,6 @@
 <?php
 $_item = $this->getItem();
 $_order = $this->getItem()->getOrder();
-$mediaModel = Mage::getModel('catalog/product_media_config');
 $new_sku = $this->escapeHtml($this->getSku($_item));
 $new_sku = current(explode('-',$new_sku));
 ?>
@@ -48,9 +47,6 @@ if ($this->getItemOptions()):
 endif; ?>
 
 <tr>
-    <td align="left" valign="top" style="padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
-        <img src="<?php echo isset($print_image) ? $print_image : $mediaModel->getMediaUrl($_item->getProduct()->getThumbnail()) ?>" width="135" alt="<?php echo $_item->getName() ?>" />
-    </td>
     <td align="left" valign="top" style="font-size:11px; padding:3px 9px; border-bottom:1px dotted #CCCCCC;">
         <strong style="font-size:11px;"><?php echo $this->escapeHtml($_item->getName()) ?></strong>
         <?php echo $output;?>
