@@ -83,7 +83,7 @@ if ($productThumbnail) {
     <td>
         <h2 class="product-name">
         <?php if ($this->hasProductUrl()):?>
-            <a href="<?php echo $this->getProductUrl() ?>"><?php echo $this->escapeHtml($this->getProductName()) ?></a>
+            <a href="<?php echo $this->getProductUrl() ?>?pj=<?php echo $refid; ?>"><?php echo $this->escapeHtml($this->getProductName()) ?></a>
         <?php else: ?>
             <?php echo $this->escapeHtml($this->getProductName()) ?>
         <?php endif; ?>
