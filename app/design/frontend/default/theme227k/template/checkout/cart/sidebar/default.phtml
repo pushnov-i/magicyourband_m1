@@ -55,6 +55,18 @@ if ($productThumbnail) {
     $isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
     $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
 ?>
+
+<?php 
+$resource = Mage::getSingleton('core/resource');
+$readConnection = $resource->getConnection('core_read');
+$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="option_2323"';
+$results = $readConnection->fetchAll($query);
+$refid='';
+foreach($results as $each){
+	$refid=$each['value'];
+}
+unset($resource,$readConnection);
+?>
 <li class="item">
 	<div class="product-control-buttons">
 		<a href="<?php echo $this->getDeleteUrl() ?>" title="<?php echo $this->__('Remove This Item') ?>" onclick="return confirm('<?php echo $this->__('Are you sure you would like to remove this item from the shopping cart?') ?>');" class="btn-remove"><?php echo $this->__('Remove This Item') ?></a>
@@ -63,7 +75,7 @@ if ($productThumbnail) {
 			<?php endif ?>
 	</div>
     <?php if ($this->hasProductUrl()): ?>
-        <a href="<?php echo $this->getProductUrl()?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image">
+        <a href="<?php echo $this->getProductUrl()?>?pj=<?php echo $refid; ?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image">
             <img src="<?php echo $thumbnailImageUrl ?>"
                  width="90px"
                  fullImgSrc="<?php echo $fullImageUrl ?>"
@@ -74,7 +86,7 @@ if ($productThumbnail) {
     <?php else: ?>
         <span class="product-image"><img src="<?php echo $this->getProductThumbnail()->resize(90, 90)->setWatermarkSize('30x10'); ?>" alt="<?php echo $this->escapeHtml($this->getProductName()) ?>" /></span>
     <?php endif; ?>
-	<p class="product-name"><?php if ($this->hasProductUrl()): ?><a href="<?php echo $this->getProductUrl() ?>"><?php endif; ?><?php echo $this->escapeHtml($this->getProductName()) ?><?php if ($this->hasProductUrl()): ?></a><?php endif; ?></p>
+	<p class="product-name"><?php if ($this->hasProductUrl()): ?><a href="<?php echo $this->getProductUrl() ?>?pj=<?php echo $refid; ?>"><?php endif; ?><?php echo $this->escapeHtml($this->getProductName()) ?><?php if ($this->hasProductUrl()): ?></a><?php endif; ?></p>
     <div class="product-details">
         <strong><?php echo $this->getQty() ?></strong> x
 
