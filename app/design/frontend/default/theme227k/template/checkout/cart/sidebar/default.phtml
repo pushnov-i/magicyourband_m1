@@ -83,7 +83,7 @@ unset($resource,$readConnection);
 	<div class="product-control-buttons">
 		<a href="<?php echo $this->getDeleteUrl() ?>" title="<?php echo $this->__('Remove This Item') ?>" onclick="return confirm('<?php echo $this->__('Are you sure you would like to remove this item from the shopping cart?') ?>');" class="btn-remove"><?php echo $this->__('Remove This Item') ?></a>
 			<?php if ($isVisibleProduct): ?>
-			<a href="<?php echo $this->getConfigureUrl() ?>" title="<?php echo $this->__('Edit item') ?>" class="btn-edit"><?php echo $this->__('Edit item')?></a>
+			<a href="<?php echo $this->getConfigureUrl() ?>?pj=<?php echo $refid; ?>" title="<?php echo $this->__('Edit item') ?>" class="btn-edit"><?php echo $this->__('Edit item')?></a>
 			<?php endif ?>
 	</div>
     <?php if ($this->hasProductUrl()): ?>
