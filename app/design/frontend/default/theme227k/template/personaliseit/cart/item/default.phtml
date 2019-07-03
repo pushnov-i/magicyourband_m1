@@ -28,11 +28,23 @@
 $_item = $this->getItem();
 $resource = Mage::getSingleton('core/resource');
 $readConnection = $resource->getConnection('core_read');
-$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="option_2323"';
+$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="info_buyRequest"';
 $results = $readConnection->fetchAll($query);
 $refid='';
+$unserialized = array();
 foreach($results as $each){
-	$refid=$each['value'];
+	$unserialized[] = unserialize($each['value']);
+    
+}
+$i=0;
+
+foreach ($unserialized as $each) {
+    $i=0;
+    foreach($each['options'] as $e){
+        if($i==1){$refid=$e;}
+        $i++;
+    }
+    
 }
 unset($resource,$readConnection);
 $product = $_item->getProduct();

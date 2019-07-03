@@ -59,7 +59,7 @@ if ($productThumbnail) {
 <?php 
 $resource = Mage::getSingleton('core/resource');
 $readConnection = $resource->getConnection('core_read');
-$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="option_2323"';
+$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="info_buyRequest"';
 $results = $readConnection->fetchAll($query);
 $refid='';
 foreach($results as $each){
