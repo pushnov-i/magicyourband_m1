@@ -87,7 +87,7 @@ unset($resource,$readConnection);
 			<?php endif ?>
 	</div>
     <?php if ($this->hasProductUrl()): ?>
-        <a href="<?php echo $this->getProductUrl()?>?pj=<?php echo $refid; ?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image">
+        <a href="<?php echo $this->getProductUrl()?>" title="<?php echo $this->escapeHtml($this->getProductName()) ?>" class="product-image">
             <img src="<?php echo $thumbnailImageUrl ?>"
                  width="90px"
                  fullImgSrc="<?php echo $fullImageUrl ?>"
