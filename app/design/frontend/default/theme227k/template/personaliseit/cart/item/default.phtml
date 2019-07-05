@@ -95,7 +95,7 @@ if ($productThumbnail) {
     <td>
         <h2 class="product-name">
         <?php if ($this->hasProductUrl()):?>
-            <a href="<?php echo $this->getProductUrl() ?>?pj=<?php echo $refid; ?>"><?php echo $this->escapeHtml($this->getProductName()) ?></a>
+            <a href="<?php echo $this->getProductUrl() ?>"><?php echo $this->escapeHtml($this->getProductName()) ?></a>
         <?php else: ?>
             <?php echo $this->escapeHtml($this->getProductName()) ?>
         <?php endif; ?>
@@ -131,6 +131,9 @@ if ($productThumbnail) {
             <?php echo $addInfoBlock->setItem($_item)->toHtml() ?>
         <?php endif;?>
     </td>
+	<td class="a-center">		
+		<a href="<?php echo $this->getConfigureUrl() ?>?pj=<?php echo $refid; ?>" title="<?php echo $this->__('Edit item parameters') ?>"><?php echo $this->__('Edit') ?></a>
+	</td>
 	<?php /* ?>
     <td class="a-center">
         <?php if ($isVisibleProduct): ?>
@@ -340,9 +343,6 @@ if ($productThumbnail) {
         <?php endif; ?>
     </td>
     <?php endif; ?>
-	<td class="a-center">		
-		<a href="<?php echo $this->getConfigureUrl() ?>?pj=<?php echo $refid; ?>" title="<?php echo $this->__('Edit item parameters') ?>"><?php echo $this->__('Edit') ?></a>
-	</td>
     <td class="a-center">
 		<a href="<?php echo $this->getDeleteUrl()?>" title="<?php echo $this->__('Remove item')?>" class="btn-remove btn-remove2"><?php echo $this->__('Remove item')?></a>
 	</td>
