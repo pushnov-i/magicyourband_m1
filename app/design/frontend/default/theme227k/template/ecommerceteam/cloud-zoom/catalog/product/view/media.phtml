@@ -137,6 +137,15 @@ if ($zoomHeight) {
 		$webGlUrl .= $imageUrlPart;
 	}
 
+	// MD: adding the JOBID location from the page URL to the iframe URLs
+	$printjob = Mage::app()->getRequest()->getParam('pj');
+	if ($printjob) {
+		$printjobPart = '&pj=' . ($printjob);
+		 
+		$defaultUrl .= $printjobPart;
+		$flashUrl .= $printjobPart;
+		$webGlUrl .= $printjobPart;
+	}  
 ?>
 
 
