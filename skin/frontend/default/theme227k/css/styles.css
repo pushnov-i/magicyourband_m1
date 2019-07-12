@@ -2090,21 +2090,26 @@ tr.summary-details-excluded { font-style:italic; }
 .opc .input-box {margin-bottom:15px;}
 .opc .fields select, .opc .field select {width: 313px;}
 
+.cart .data-table td.vkCartImagePopup-thumb { width: auto; min-width: 100px; }
+.cart .data-table td.vkCartImagePopup-thumb img { width: 100px; margin: auto; }
 
-#checkout-review-table tr{ background:none;}
-#checkout-review-table thead{ background:none;}
-#checkout-review-table th{ padding:12px 20px 12px 20px; font-size:12px; font-weight:bold; color:#000000;}
+#checkout-review-table colgroup {display: none; }
+#checkout-review-table tr{ background:none; margin: 4px 0 25px; border: 1px solid #e9e9e9;}
+#checkout-review-table thead{ background:none; display: none;}
+#checkout-review-table th{ padding:12px 20px 12px 20px; border:1px solid #ececec; font-size:12px; font-weight:bold; color:#000000; }
 #checkout-review-table td{ border:1px solid #ececec; background:#none; padding:15px 20px;}
+#checkout-review-table td.last {border: 0;}
 #checkout-review-table td h3{ margin-bottom:0; font-size:12px; color:#2f2f2f; text-transform:uppercase;}
 #checkout-review-table .price{ font-weight:bold;}
-#checkout-review-table th{ border:1px solid #ececec;}
 #checkout-review-table-wrapper { overflow:hidden;}
-#checkout-review-table{}
 #checkout-review-table .item-options {padding-top:5px;}
-#checkout-review-table tfoot td{ font-weight:bold; color:#000000;text-align:right !important;}
-#checkout-review-table tfoot td+td{ text-align:left !important;}
+#checkout-review-load #checkout-review-table tfoot td{ font-weight:bold; color:#000000;text-align:right !important; padding-right: 20px;}
 #checkout-review-table tbody .first{}
 #checkout-review-table tbody tr.last{}
+#checkout-review-table td,
+#checkout-review-table tr,
+#checkout-review-table tbody {display: block; text-align: center !important;}
+#checkout-review-load  table#checkout-review-table tbody tr td.ost-item-image { width: auto; }
 #review-buttons-container{ padding:20px 0 0 0; margin:0 0 0 0;}
 #co-shipping-form{ border:1px solid #ececec; padding:10px; display:block;}
 
@@ -3057,9 +3062,6 @@ img { max-width:100%; }
 #control_window_2 .lcontainer {height: 605px !important;}
 #control_window_2 .lcontainer iframe {  height: 518px; padding: 7px;}
 
-.mw-ost-review-ct .cart .discount h2 {
-	width: 38%;
-}
 /* PS End */
 div.mw-osc-column-2{
 	position: relative;
