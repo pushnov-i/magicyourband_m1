@@ -1,0 +1,250 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/klass.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/code.photoswipe.jquery-3.0.5.js') ?>"></script>
+<?php
+/**
+ * Cloud Image Zoom - Magento Extension
+ *
+ * @package     CloudZoom
+ * @category    EcommerceTeam
+ * @copyright   Copyright 2011 EcommerceTeam Inc. (http://www.ecommerce-team.com)
+ * @version:    1.1.3
+ */
+
+/** @var $this Mage_Catalog_Block_Product_View_Media */
+/** @var $product Mage_Catalog_Model_Product */
+$product      = $this->getProduct();
+/** @var $helper EcommerceTeam_CloudZoom_Helper_Data */
+$helper       = Mage::helper('ecommerceteam_cloudzoom');
+/** @var $outputHelper Mage_Core_Block_Abstract */
+$outputHelper = $this->helper('catalog/output');
+
+$position       = $helper->getConfigData('position');
+$showTitle      = intval($helper->getConfigFlag('show_title'));
+$titleOpacity   = intval($helper->getConfigData('title_opacity')) / 100;
+$lensOpacity    = intval($helper->getConfigData('lens_opacity')) / 100;
+$tintColor      = trim($helper->getConfigData('tint_color'));
+$tintOpacity    = intval($helper->getConfigData('tint_opacity')) / 100;
+$zoomWidth      = intval($helper->getConfigData('zoom_width'));
+$zoomHeight     = intval($helper->getConfigData('zoom_height'));
+$bigImageWidth  = intval($helper->getConfigData('big_image_width'));
+$bigImageHeight = intval($helper->getConfigData('big_image_height'));
+
+$bigImageX  = 308;
+$bigImageY = 308;
+
+$config = array(
+    "position:'{$position}'",
+    "showTitle:{$showTitle}",
+    "titleOpacity:{$titleOpacity}",
+    "lensOpacity:{$lensOpacity}",
+);
+    
+if ($position == 'inside') {
+    $config[] = 'adjustX: -4,adjustY:-4';
+} elseif ($position == 'right') {
+    $config[] = 'adjustX: 10,adjustY:-4';
+} elseif ($position == 'bottom') {
+    $config[] = 'adjustX: -4,adjustY:10';
+} elseif ($position == 'left') {
+    $config[] = 'adjustX: -18,adjustY:-4';
+} elseif ($position == 'top') {
+    $config[] = 'adjustX: -4,adjustY:-18';
+}
+
+if ($tintColor) {
+    $config[] = "tint:'{$tintColor}',tintOpacity:{$tintOpacity}";
+}
+
+if ($zoomWidth) {
+    $config[] = "zoomWidth:{$zoomWidth}";
+}
+
+if ($zoomHeight) {
+    $config[] = "zoomHeight:{$zoomHeight}";
+}
+  $_product = $this->getProduct();
+	$product = $this->getProduct();
+	
+	// There are several different iFrame URLs that might be available to us
+	// and we need to determine which one to use.
+	//
+	// This is done in the following order:
+	// 
+	//	1)	If the client browser supports WebGL and a URL has been specified
+	//		for WebGL then the WebGL URL is used.
+	//
+	//	2)	If the client browser supports Flash and a URL has been specified
+	//		for Flash then the Flash URL is used.
+	//
+	//	3)	If the client browser is a mobile phone and a URL has been specified
+	//		for mobile phone devices then the mobile phone URL is used. Note
+	//		that this does not include tablet devices.
+	//
+	//	4)	If a standard iFrame URL has been specified then we use it.
+	//
+	//	5)	If a legacy EasyPromo3D URL has been specified then we use it.
+	//
+	//	6)	If the above all fail then we use the standard Magento product view.
+	//
+	// Note that (1) and (2) are only detectable on the client side.
+	//
+	// First we determine which of (3), (4) and (5) should be used.
+	
+	$detect = new Gateway3D_PersonaliseIt_Helper_MobileDetect;
+	$isMobile = $detect->isMobile() && !$detect->isTablet();
+	
+	$urlKey = $isMobile ? 'personaliseit_m_iframe_url' : 'personaliseit_iframe_url';
+	
+	$defaultUrl = trim($product->{$urlKey});
+	
+	if($isMobile && !$defaultUrl)
+	{
+		$defaultUrl = trim($product->personaliseit_iframe_url);
+	}
+	
+	if(!$defaultUrl)
+	{
+		$defaultUrl = trim($product->easypromo3d_url);
+	}
+	
+	// Determine which URLs are available
+	$hasWebGlUrl = !!$product->personaliseit_gl_iframe_url;
+	$hasFlashUrl = !!$product->personaliseit_fl_iframe_url;
+	$hasDefaultUrl = !!$defaultUrl;
+	$hasUrl = $hasWebGlUrl || $hasFlashUrl || $hasDefaultUrl;
+	
+	// Init standard params that all URLs will need
+	$params = array(
+		'id'	=> $_product->getId(),
+	);
+	
+	$epa = rawurlencode(Mage::getUrl('personaliseit/product/epa', $params));	
+	$callback = rawurlencode(Mage::getUrl('personaliseit/product/callback', $params));
+	
+	// Build URLs
+	$defaultUrl = "{$defaultUrl}&a2cpost=1&epa={$epa}&ep3dUrl={$callback}&guid={$product->personaliseit_company_ref_id}";
+	$flashUrl = "{$product->personaliseit_fl_iframe_url}&a2cpost=1&epa={$epa}&ep3dUrl={$callback}&guid={$product->personaliseit_company_ref_id}";
+	$webGlUrl = "{$product->personaliseit_gl_iframe_url}&a2cpost=1&epa={$epa}&ep3dUrl={$callback}&guid={$product->personaliseit_company_ref_id}";
+
+
+	// VK: adding the backgroung image location from the page URL to the iframe URLs
+	$imageUrl = Mage::app()->getRequest()->getParam('bgimage');
+	if ($imageUrl) {
+		$imageUrlPart = '&i=' . urlencode($imageUrl);
+
+		$defaultUrl .= $imageUrlPart;
+		$flashUrl .= $imageUrlPart;
+		$webGlUrl .= $imageUrlPart;
+	}
+
+?>
+
+
+<?php if($hasUrl && $product->personaliseit_company_ref_id): ?>
+	<iframe id="personalise-it-iframe" style="border: 0; width: 100%; height: 850px;" src=""></iframe>
+	
+	<script>
+		var webGlUrl = <?= $hasWebGlUrl ? "\"{$webGlUrl}\"" : 'false' ?>;
+		var flashUrl = <?= $hasFlashUrl ? "\"{$flashUrl}\"" : 'false' ?>;
+		var defaultUrl = <?= $hasDefaultUrl ? "\"{$defaultUrl}\"" : 'false' ?>;
+		
+		var hasWebGl = !!document.createElement('canvas').getContext("webgl");
+		var hasFlash = ((typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false));
+		
+		var url = "";
+		
+		if(hasWebGl && webGlUrl) {
+			url = webGlUrl;
+		} else if(hasFlash && flashUrl) {
+			url = flashUrl;
+		} else if(defaultUrl) {
+			url = defaultUrl;
+		}
+									
+		document.getElementById('personalise-it-iframe').src = url;
+	</script>
+
+	<?php if (count($this->getGalleryImages()) > 0): ?>
+      <h2>Gallery</h2>
+      <div class="more-views gallery-pit">
+          <ul>
+          <?php foreach ($this->getGalleryImages() as $_image): ?>
+              <li>
+                  <a data-lightbox="gallery" href="<?php echo $this->helper('catalog/image')->init($product, 'image', $_image->getFile())->resize($bigImageWidth, $bigImageHeight);?>" target="_blank" title="<?php echo $this->htmlEscape($_image->getLabel()) ?>">
+                      <img src="<?php echo $this->helper('catalog/image')->init($product, 'thumbnail', $_image->getFile())->resize(101);?>" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>"/>
+                  </a>
+              </li>
+          <?php endforeach; ?>
+          </ul>
+      </div>
+  <?php endif; ?>
+
+<?php else: ?>
+
+<?php if ($zoomWidth > 50 and $zoomHeight > 50  ): ?>
+<style type="text/css">
+.cloud-zoom-big {width:<?php echo "$zoomWidth"; ?>px !important; height:<?php echo "$zoomHeight"; ?>px !important;  }
+</style>
+<?php endif; ?>
+
+<div class="product-box-customs">
+    <?php if ($product->getImage() != 'no_selection' && $product->getImage()): ?>
+    
+    <p class="product-image">
+        <a  href='<?php echo $this->helper('catalog/image')->init($product, 'image')->resize($bigImageWidth, $bigImageHeight);?>' class = 'cloud-zoom' id='zoom1' rel="<?php echo implode($config, ',');?>">
+            
+            <img class="big" src="<?php echo $this->helper('catalog/image')->init($product, 'image')->resize($bigImageX, $bigImageY);?>" alt='' title="<?php echo $this->htmlEscape($this->getImageLabel());?>" />
+        </a>
+    </p>
+    <?php else: ?>
+    <p class="product-image">
+        <?php
+            $_img = '<img src="'.$this->helper('catalog/image')->init($product, 'image')->resize($bigImageX, $bigImageY).'" alt="'.$this->htmlEscape($this->getImageLabel()).'" title="'.$this->htmlEscape($this->getImageLabel()).'" />';
+            echo $outputHelper->productAttribute($product, $_img, 'image');
+        ?>
+    </p>
+
+    <?php endif; ?>
+    <?php if (count($this->getGalleryImages()) > 0): ?>
+    
+         <?php if (count($this->getGalleryImages()) > 3)  {
+            $carous='tumbSlider';
+            $tumbSliderControl = '<a class="tumbSlider-prev  icon-chevron-sign-left" href="#"></a>
+            <a class="tumbSlider-next  icon-chevron-sign-right" href="#"></a>';
+        } else 
+            {  
+                $tumbSliderControl ='';
+                $carous='tumbSlider-none';
+            } ?>
+    
+    <div class="more-views">
+        <h2><?php echo $this->__('More Views') ?></h2>
+        <div class="container-slider">
+            <ul class="slider <?php echo $carous;?>" >
+            <?php foreach ($this->getGalleryImages() as $_image): ?>
+                <li>
+                    <a href='<?php echo $this->helper('catalog/image')->init($product, 'image', $_image->getFile())->resize($bigImageWidth, $bigImageHeight);?>' class='cloud-zoom-gallery' title='<?php echo $this->htmlEscape($_image->getLabel()) ?>'
+                    rel="useZoom: 'zoom1', smallImage: '<?php echo $this->helper('catalog/image')->init($product, 'image', $_image->getFile())->resize($bigImageX, $bigImageY);?>' ">
+                    <img src="<?php echo $this->helper('catalog/image')->init($product, 'thumbnail', $_image->getFile())->resize(97);?>" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>"/>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+            <?php echo "$tumbSliderControl"; ?>
+        </div>
+    </div>
+        <div class="gallery-swipe-content">
+            <ul id="gallery-swipe" class="gallery-swipe">
+                <?php foreach ($this->getGalleryImages() as $_image): ?>
+                    <li>
+                        <a href='<?php echo $this->helper('catalog/image')->init($product, 'thumbnail', $_image->getFile())->resize($bigImageWidth, $bigImageHeight);?>'  title='<?php echo $this->htmlEscape($_image->getLabel()) ?>'>
+                        <img src="<?php echo $this->helper('catalog/image')->init($product, 'thumbnail', $_image->getFile())->resize($bigImageWidth, $bigImageHeight);?>" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>"/>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+</div>
+
+    <?php endif; ?>
