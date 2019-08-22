@@ -26,6 +26,27 @@
 ?>
 <?php
 $_item = $this->getItem();
+$resource = Mage::getSingleton('core/resource');
+$readConnection = $resource->getConnection('core_read');
+$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="info_buyRequest"';
+$results = $readConnection->fetchAll($query);
+$refid='';
+$unserialized = array();
+foreach($results as $each){
+	$unserialized[] = unserialize($each['value']);
+    
+}
+$i=0;
+
+foreach ($unserialized as $each) {
+    $i=0;
+    foreach($each['options'] as $e){
+        if($i==1){$refid=$e;}
+        $i++;
+    }
+    
+}
+unset($resource,$readConnection);
 $product = $_item->getProduct();
 $isVisibleProduct = $product->isVisibleInSiteVisibility();
 $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
@@ -110,6 +131,9 @@ if ($productThumbnail) {
             <?php echo $addInfoBlock->setItem($_item)->toHtml() ?>
         <?php endif;?>
     </td>
+	<td class="a-center">		
+		<a href="<?php echo $this->getConfigureUrl() ?>?pj=<?php echo $refid; ?>" title="<?php echo $this->__('Edit item parameters') ?>"><?php echo $this->__('Edit') ?></a>
+	</td>
 	<?php /* ?>
     <td class="a-center">
         <?php if ($isVisibleProduct): ?>
@@ -319,5 +343,7 @@ if ($productThumbnail) {
         <?php endif; ?>
     </td>
     <?php endif; ?>
-    <td class="a-center"><a href="<?php echo $this->getDeleteUrl()?>" title="<?php echo $this->__('Remove item')?>" class="btn-remove btn-remove2"><?php echo $this->__('Remove item')?></a></td>
+    <td class="a-center">
+		<a href="<?php echo $this->getDeleteUrl()?>" title="<?php echo $this->__('Remove item')?>" class="btn-remove btn-remove2"><?php echo $this->__('Remove item')?></a>
+	</td>
 </tr>

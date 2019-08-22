@@ -55,11 +55,35 @@ if ($productThumbnail) {
     $isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
     $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
 ?>
+
+<?php 
+$resource = Mage::getSingleton('core/resource');
+$readConnection = $resource->getConnection('core_read');
+$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="info_buyRequest"';
+$results = $readConnection->fetchAll($query);
+$refid='';
+$unserialized = array();
+foreach($results as $each){
+	$unserialized[] = unserialize($each['value']);
+    
+}
+$i=0;
+
+foreach ($unserialized as $each) {
+    $i=0;
+    foreach($each['options'] as $e){
+        if($i==1){$refid=$e;}
+        $i++;
+    }
+    
+}
+unset($resource,$readConnection);
+?>
 <li class="item">
 	<div class="product-control-buttons">
 		<a href="<?php echo $this->getDeleteUrl() ?>" title="<?php echo $this->__('Remove This Item') ?>" onclick="return confirm('<?php echo $this->__('Are you sure you would like to remove this item from the shopping cart?') ?>');" class="btn-remove"><?php echo $this->__('Remove This Item') ?></a>
 			<?php if ($isVisibleProduct): ?>
-			<a href="<?php echo $this->getConfigureUrl() ?>" title="<?php echo $this->__('Edit item') ?>" class="btn-edit"><?php echo $this->__('Edit item')?></a>
+			<a href="<?php echo $this->getConfigureUrl() ?>?pj=<?php echo $refid; ?>" title="<?php echo $this->__('Edit item') ?>" class="btn-edit"><?php echo $this->__('Edit item')?></a>
 			<?php endif ?>
 	</div>
     <?php if ($this->hasProductUrl()): ?>
