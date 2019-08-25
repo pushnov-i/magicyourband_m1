@@ -75,6 +75,15 @@ if ($productThumbnail) {
 	$fullImageUrl = (string) Mage::helper('catalog/image')->init($p, 'image')->resize(500);
 }
 
+$customerId='';
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+    $customerId = $customer->getID();
+    /*$custName = $customer->getName();
+    $custEmail = $customer->getEmail();*/
+}
+
 
 ?>
 <tr>
@@ -100,7 +109,29 @@ if ($productThumbnail) {
             <?php echo $this->escapeHtml($this->getProductName()) ?>
         <?php endif; ?>
         </h2>
-        <?php /* if ($_options = $this->getOptionList()): ?>
+		<div class="add-showcase">
+			<a href="javascript:void(0)" class="add-to-showcase-<?php echo $_item->getId(); ?>">Add to Showcase</a><br/>
+			<input type="text" style="display:none;width: 150px;height: 25px;font-size: 15px;" class="customer-name-<?php echo $_item->getId(); ?> showcase-content-<?php echo $_item->getId(); ?>" placeholder="Enter Your name"/><br/>
+			<span class="customer-name-error-<?php echo $_item->getId(); ?>" style="color:red;display:none;">Please enter your name</span><br/>
+			<button type="button" style="display:none;" title="Confirm" class="button showcase-content-<?php echo $_item->getId(); ?> showcase-submit showcase-submit-<?php echo $_item->getId(); ?>" value="Confirm"><span><span>Confirm</span></span></button>
+        </div>
+		<script>
+			jQuery('document').ready(function(){
+				jQuery('.add-to-showcase-<?php echo $_item->getId(); ?>').click(function(){
+					jQuery('.showcase-content-<?php echo $_item->getId(); ?>').show();
+					jQuery('.customer-name-<?php echo $_item->getId(); ?>').focus();
+				});
+				jQuery('.showcase-submit-<?php echo $_item->getId(); ?>').click(function(){
+					if(jQuery('.customer-name-<?php echo $_item->getId(); ?>').val()){
+						window.location.href="<?php echo Mage::getBaseUrl(); ?>showcase/index/saveshowcase/?product_id=<?php echo $this->getProduct()->getId(); ?>&product_name=<?php echo $this->getProductName(); ?>&product_url=<?php echo $this->getProductUrl() ?>&pj_number=<?php echo $refid; ?>&image_url=<?php echo $fullImageUrl; ?>&customer_name="+jQuery('.customer-name-<?php echo $_item->getId(); ?>').val();
+					} 	
+					else {
+						jQuery('.customer-name-error-<?php echo $_item->getId(); ?>').show();
+					}
+				});
+			});
+		</script>
+		<?php /* if ($_options = $this->getOptionList()): ?>
         <dl class="item-options">
             <?php foreach ($_options as $_option) : ?>
 						

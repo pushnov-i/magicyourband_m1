@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <showcase_adminhtml_shwocasebackend_index>
+	<reference name="content">
+	  <block type="showcase/adminhtml_showcasebackend" name="showcasebackend" template="showcase/showcasebackend.phtml"/>
+	</reference>
+  </showcase_adminhtml_shwocasebackend_index>
+  <showcase_adminhtml_showcase_index>
+	<reference name="content">
+	  <block type="showcase/adminhtml_showcase" name="showcase" />
+	</reference>
+  </showcase_adminhtml_showcase_index>
+</layout>

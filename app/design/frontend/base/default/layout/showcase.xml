@@ -1,0 +1,12 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+  <showcase_index_index>   
+    <reference name="root">   
+      <action method="setTemplate"><template>page/2columns-left.phtml</template></action>   
+    </reference>   
+    <reference name="content">   
+      <block type="showcase/index" name="showcase_index" template="showcase/index.phtml"/>   
+    </reference>   
+  </showcase_index_index>   
+</layout>   
+	

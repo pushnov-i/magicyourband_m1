@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Showcase_Manager>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>0.1.0</version>
+    </Showcase_Manager>
+  </modules>
+</config>
