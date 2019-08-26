@@ -28,25 +28,26 @@ class Showcase_Manager_IndexController extends Mage_Core_Controller_Front_Action
 		!empty($_REQUEST['customer_name']) &&
 		!empty($_REQUEST['product_url'])){
 			 
-			 $showcaseData['product_id']=$_REQUEST['product_id'];
-			 $showcaseData['product_name']=$_REQUEST['product_name'];
-			 $showcaseData['pjnumber']=$_REQUEST['pj_number'];
-			 $showcaseData['image_url']=$_REQUEST['image_url'];
-			 $showcaseData['customer_name']=$_REQUEST['customer_name'];
-			 $showcaseData['link']=$_REQUEST['product_url'];
-			 $showcaseData['customer_id']=$_REQUEST['customer_id'];
+			$showcaseData['product_id']=$_REQUEST['product_id'];
+			$showcaseData['product_name']=$_REQUEST['product_name'];
+			$showcaseData['pjnumber']=$_REQUEST['pj_number'];
+			$showcaseData['image_url']=$_REQUEST['image_url'];
+			$showcaseData['customer_name']=$_REQUEST['customer_name'];
+			$showcaseData['link']=$_REQUEST['product_url'];
+			$showcaseData['customer_id']=$_REQUEST['customer_id'];
 
-			 $showcaseCollection = Mage::getModel('showcase/showcase')->getCollection()->addFieldToFilter('pjnumber',$showcaseData['pjnumber']);
+			$showcaseCollection = Mage::getModel('showcase/showcase')->getCollection()->addFieldToFilter('pjnumber',$showcaseData['pjnumber']);
 
-			 if(empty($showcaseCollection->getData())){
-				 $model = Mage::getModel("showcase/showcase")
-							->addData($showcaseData)
-							->save();
+			$showcaseselction= $showcaseCollection->getData();
+			if(empty($showcaseselction)){
+				$model = Mage::getModel("showcase/showcase")
+						->addData($showcaseData)
+						->save();
 
-				 Mage::getSingleton('core/session')->addSuccess(Mage::helper("showcase")->__("Design Submitted to showcase"));
-			 } else {
-				 Mage::getSingleton("core/session")->addError(Mage::helper("showcase")->__("This Design Already Submitted to showcase"));
-			 }
+				Mage::getSingleton('core/session')->addSuccess(Mage::helper("showcase")->__("Design Submitted to showcase"));
+			} else {
+				Mage::getSingleton("core/session")->addError(Mage::helper("showcase")->__("This Design Already Submitted to showcase"));
+			}
 		} else {
 			Mage::getSingleton("adminhtml/session")->addSuccess(Mage::helper("adminhtml")->__("Something went wrong, please try again later"));
 		}
