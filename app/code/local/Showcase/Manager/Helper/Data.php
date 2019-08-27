@@ -1,5 +1,5 @@
 <?php
-class Showcase_Customwidget_Helper_Data extends Mage_Core_Helper_Abstract
+class Showcase_Manager_Helper_Data extends Mage_Core_Helper_Abstract
 {
 	 public function getCustomDesign()
 	 {
