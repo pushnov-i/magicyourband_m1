@@ -44,7 +44,10 @@ class Showcase_Manager_Block_Adminhtml_Showcase_Grid extends Mage_Adminhtml_Bloc
 				"header" => Mage::helper("showcase")->__("Description"),
 				"index" => "description",
 				));
-				
+				$this->addColumn("customer_name", array(
+				"header" => Mage::helper("showcase")->__("Customer Name"),
+				"index" => "customer_name",
+				));
 				$this->addColumn('is_active', array(
 				'header' => Mage::helper('showcase')->__('Add to Showcase'),
 				'index' => 'is_active',
