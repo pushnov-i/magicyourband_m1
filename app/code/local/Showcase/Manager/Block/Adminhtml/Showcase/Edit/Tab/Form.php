@@ -60,7 +60,14 @@ class Showcase_Manager_Block_Adminhtml_Showcase_Edit_Tab_Form extends Mage_Admin
 				"required" => true,
 				"name" => "image_url",
 				));
+				$fieldset->addField("is_active", "select", array(
+				"label" => Mage::helper("showcase")->__("Add to Showcase"),
+				
 
+				"name" => "is_active",
+				'value'  => '1',
+				'values' => array('0' => 'No','1' => 'Yes'),
+				));
 				if (Mage::getSingleton("adminhtml/session")->getShowcaseData())
 				{
 					$form->setValues(Mage::getSingleton("adminhtml/session")->getShowcaseData());

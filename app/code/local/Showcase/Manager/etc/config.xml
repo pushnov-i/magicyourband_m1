@@ -22,6 +22,25 @@
 			</showcase>
 		  </updates>
 		</layout>
+		
+		  <events>
+			<sales_quote_item_save_after >
+				<observers>
+					<showcase>
+						<class>showcase/observer</class>
+						<method>cartProductAddAfter</method>
+					</showcase>
+				</observers>
+			</sales_quote_item_save_after >
+			<!--<checkout_cart_product_update_after>
+				<observers>
+					<showcase>
+						<class>showcase/observer</class>
+						<method>cartProductUpdateAfter</method>
+					</showcase>
+				</observers>
+			</checkout_cart_product_update_after>-->
+		</events>
   </frontend>
   <global>
     <helpers>
@@ -91,6 +110,11 @@
 			<sort_order>0</sort_order>
 			<action>admin_showcase/adminhtml_showcase</action>
 		  </showcase>
+		   <showcasebackend module="showcase">
+			<title>New Showcase Manager</title>
+			<sort_order>1</sort_order>
+			<action>admin_showcase/adminhtml_showcasebackend</action>
+		  </showcasebackend>
 		</children>
 	  </showcase>
 	</menu>
@@ -105,13 +129,13 @@
 			  <title>Showcase</title>
 			  <sort_order>1000</sort_order>
 			  <children>
-		  <showcasebackend translate="title">
-			<title>showcase</title>
-		  </showcasebackend>
-		  <showcase translate="title">
-			<title>Manage Showcase</title>
-			<sort_order>0</sort_order>
-		  </showcase>
+			  <showcasebackend translate="title">
+				<title>showcase</title>
+			  </showcasebackend>
+			  <showcase translate="title">
+				<title>Manage Showcase</title>
+				<sort_order>0</sort_order>
+			  </showcase>
 			  </children>
 			</showcase>
 		  </children>

@@ -109,12 +109,12 @@ if (Mage::getSingleton('customer/session')->isLoggedIn()) {
             <?php echo $this->escapeHtml($this->getProductName()) ?>
         <?php endif; ?>
         </h2>
-		<div class="add-showcase">
+		<!--<div class="add-showcase">
 			<a href="javascript:void(0)" class="add-to-showcase-<?php echo $_item->getId(); ?>">Add to Showcase</a><br/>
 			<input type="text" style="display:none;width: 150px;height: 25px;font-size: 15px;" class="customer-name-<?php echo $_item->getId(); ?> showcase-content-<?php echo $_item->getId(); ?>" placeholder="Enter Your name"/><br/>
 			<span class="customer-name-error-<?php echo $_item->getId(); ?>" style="color:red;display:none;">Please enter your name</span><br/>
 			<button type="button" style="display:none;" title="Confirm" class="button showcase-content-<?php echo $_item->getId(); ?> showcase-submit showcase-submit-<?php echo $_item->getId(); ?>" value="Confirm"><span><span>Confirm</span></span></button>
-        </div>
+        </div>-->
 		<script>
 			jQuery('document').ready(function(){
 				jQuery('.add-to-showcase-<?php echo $_item->getId(); ?>').click(function(){

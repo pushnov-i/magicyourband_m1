@@ -1,0 +1,330 @@
+<div class="page-title category-title">
+        <h1>Featured Customer Designs</h1>
+</div>
+
+<?php 
+$showcaseCollection = Mage::getModel('showcase/showcase')->getCollection()->setOrder('created_at', 'desc');
+$count=0;
+?>
+<ul class="products-grid row odd">
+<?php foreach($showcaseCollection as $singleCollection){ 
+$_product =  Mage::getModel('catalog/product')->load($singleCollection->getProductId());
+$productBlock = $this->getLayout()->createBlock('catalog/product_price');
+?>
+<li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+	<div class="grid_wrapper">
+		<a href="<?php echo $singleCollection->getLink(); ?>?pj=<?php echo $singleCollection->getPjnumber(); ?>" title="<?php echo $singleCollection->getProductName(); ?>" ><img src="<?php echo $singleCollection->getImageUrl(); ?>" alt="<?php echo $singleCollection->getProductName(); ?>"></a>
+		<div class="product-shop">
+			<?php echo $productBlock->getPriceHtml($_product); ?>
+			<!--<div class="price-box">
+				<span class="regular-price" id="product-price-1611">
+					<span class="price">$7.50</span>
+				</span>
+			</div>-->
+			<span>ID <?php echo $singleCollection->getId(); ?> </span>
+			<h2 class="product-name"><!--<a href="<?php echo $singleCollection->getLink(); ?>?pj=<?php echo $singleCollection->getPjnumber(); ?>" title="<?php echo $singleCollection->getProductName(); ?>">--><?php echo $singleCollection->getProductName(); ?><!--</a>--></h2>
+			<div class="desc_grid">Designed by <?php echo $singleCollection->getCustomerName(); ?></div>
+			<form method="post" action="<?php echo $this->getUrl('admin_showcase/adminhtml_showcasebackend/save'); ?>">
+			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+			<input type="hidden" name="id" value="<?php echo $singleCollection->getId(); ?>" />
+			<div class="desc_grid">
+			<?php if($singleCollection->getIsActive()) { ?>
+			<button type="submit" class="add-to-showcase">Remove From Showcase</a>
+			<input type="hidden" name="is_active" value="0" />
+			<?php } else { ?>
+			<button type="submit" class="add-to-showcase">Add to Showcase</a>
+			<input type="hidden" name="is_active" value="1" />
+			<?php }  ?>
+			</div>
+			</form>
+		</div>
+		<div class="label-product">             
+		</div>
+	</div>
+</li>
+<?php 
+$count++;
+if($count%3==0){ ?>
+	</ul><ul class="products-grid row odd">
+	<?php
+}
+} ?>
+ <!--<li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+   <div class="grid_wrapper">
+        <a href="<?php echo $this->getBaseurl();  ?>/design-your-own-magicband-2-skin-3d.html?pj=418BCB6B955CE4A7B8" title="Star Wars Light Sabre MagicBand" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_24475246.png" alt="Star Wars Light Sabre MagicBand"></a>
+        <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1345">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=418BCB6B955CE4A7B8" title="Star Wars Light Sabre MagicBand">An awesome Star Wars Light Sabre MagicBand</a></h2>
+                               <div class="desc_grid">By Daniel Columbare</div>
+                 
+                                  
+              
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=6D35840E885CE6BAF7" title="Miami Dolphins MagicBand 2 Skin" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_24179754.png" alt="Miami Dolphins MagicBand 2 Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1456">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=6D35840E885CE6BAF7" title="Miami Dolphins MagicBand 2 Skin">Miami Dolphins MagicBand 2 Skin</a></h2>
+                               <div class="desc_grid">By Jonathan Candia</div>
+                 
+                                  
+             
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                </ul>
+
+
+<ul class="products-grid row odd">
+                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="<?php echo $this->getBaseurl();  ?>https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=TLG25D8GMC1495210863" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_3593786.png" alt="Sorcerers of Magic Kingdom MagicBand 2 Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1611">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=TLG25D8GMC1495210863" title="Sorcerers of Magic Kingdom MagicBand 2 Skin">Sorcerers of Magic Kingdom MagicBand 2 Skin</a></h2>
+                               <div class="desc_grid">Design by TJ</div>
+                 
+                                  
+               
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=EF386CA5515CE7CA62" title="Lion King MagicBand" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_24598637.png" alt="Lion King MagicBand"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1345">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=EF386CA5515CE7CA62" title="Lion King Magic Band Skin">Lion King inspired MagicBand 2 Skin</a></h2>
+                               <div class="desc_grid">Designed by Dave Parry.</div>
+                 
+                                  
+              
+                </div>
+                                <div class="label-product">             
+                                   </div>
+                </div>
+            </li>
+                                   <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=562F9F5D145CEE6117" title="Floating Eeyore Magic Band Skin" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_24435636.png" alt="Floating Eeyore Magic Band Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1456">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="<?php  echo $this->getBaseurl(); ?>https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=562F9F5D145CEE6117" title="Floating Eeyore Magic Band Skin">Floating Eeyore Magic Band Skin</a></h2>
+                               <div class="desc_grid">Designed by Michael</div>
+                 
+                                  
+             
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                </ul>
+
+
+
+<ul class="products-grid row odd">
+                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=40EBD1B7475CEBC35F" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_24713119.png" alt="Disney Character Magic Kingdom MagicBand 2 Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1611">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=40EBD1B7475CEBC35F" title="Disney Character Magic Kingdom MagicBand 2 Skin">Disney Character Magic Kingdom MagicBand 2 Skin</a></h2>
+                               <div class="desc_grid">Design by TJ</div>
+                 
+                                  
+               
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=DFE34764F25CFC3BE6" title="Deadpool MagicBand Skin" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_25315080.png" alt="Deadpool MagicBand Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1345">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-3d.html?pj=EF386CA5515CE7CA62" title="Deadpool MagicBand Skin">Deadpool MagicBand Skin</a></h2>
+                               <div class="desc_grid">Designed by Bennett Chin</div>
+                 
+                                  
+              
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                                   <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=10BBC0C5165CEBC15B" title="Vera Bradley Style Magic Band Skin" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_24712881.png" alt="Vera Bradley Style Magic Band Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1456">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=10BBC0C5165CEBC15B" title="Vera Bradley Style Magic Band Skin">Vera Bradley Style Magic Band Skin</a></h2>
+                               <div class="desc_grid">Designed by Chloe D</div>
+                 
+                                  
+             
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                </ul>
+
+
+
+
+<ul class="products-grid row odd">
+                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=F29DBC58755D122BAD" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_26106951.png" alt="Custom Space Mountain Magic Band Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1611">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=F29DBC58755D122BAD" title="Custom Space Mountain Magic Band Skin">Custom Space Mountain Magic Band Skin</a></h2>
+                               <div class="desc_grid">Design by Matt K</div>
+                 
+                                  
+               
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                                    <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=638A4F4FF45D12204F" title="Custom Iron Man MagicBand 2 Skin" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_26104574.png" alt="Custom Iron Man MagicBand 2 Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1345">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=638A4F4FF45D12204F" title="Custom Iron Man MagicBand 2 Skin">Custom Iron Man MagicBand 2 Skin</a></h2>
+                               <div class="desc_grid">Designed by Matt K</div>
+                 
+                                  
+              
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>
+                                   <li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+                <div class="grid_wrapper">
+                <a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=E138ABEF5C5D122B74" title="Rock N Roller Coaster Custom MagicBand Skin" ><img src="https://s3-eu-west-1.amazonaws.com/assets.easypromo3d.com/output/thumbnails/print-jobs/13508_26106945.png" alt="Rock N Roller Coaster Custom MagicBand Skin"></a>
+                <div class="product-shop">
+                 
+
+                
+    <div class="price-box">
+                                                            <span class="regular-price" id="product-price-1456">
+                                            <span class="price">$7.50</span>                                    </span>
+                        
+        </div>
+
+                 <h2 class="product-name"><a href="https://www.magicyourband.com/index.php/design-your-own-magicband-2-skin-2d.html?pj=E138ABEF5C5D122B74" title="Rock N Roller Coaster Custom MagicBand Skin">Rock N Roller Coaster Custom MagicBand Skin</a></h2>
+                               <div class="desc_grid">Designed by Matt K</div>
+                 
+                                  
+             
+                </div>
+                                <div class="label-product">             
+                                                        </div>
+                </div>
+            </li>-->
+                </ul>	
+<style>	
+.products-grid{position: relative;margin-bottom: 30px;float:left;}
+	.products-grid li.item{width:31%;list-style:none;float:left;}
+	.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12	{position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;}.grid_wrapper {    border: solid 1px #e7e7e7;    padding: 18px 29px 0 29px;overflow: hidden;}.products-grid .price-box {   
+	overflow: hidden;    margin: 0 0 3px;    width: 100%;}
+	.products-grid li.item a img{width:100%;}
+	.products-grid .price-box .regular-price .price{    font-size: 23px;    font-weight: normal;    color: #6cc957;}
+	.products-grid .product-name, .products-list .product-name{font-size: 15px;font-weight: normal;line-height: 18px;margin: 0 0 1px 0;}.products-grid .product-name a, .products-list .product-name a{color: #484848;text-decoration: none;}		
+	.add-to-showcase{border:1px solid #ea7601;background:#ea7601;color:#fff;padding:10px 20px;text-decoration:none;}
+	</style>
