@@ -15,8 +15,6 @@ class Showcase_Manager_Model_Observer
         /*$quote = $_item->getQuote();
         $quoteItems = $quote->getItems();*/		
 		
-		Mage::log('itemId '.json_encode($_item->getId()), null, 'magicyourband.log', true);
-		Mage::log('productid '.$product->getId(), null, 'magicyourband.log', true);
 		
 		$resource = Mage::getSingleton('core/resource');
 		$readConnection = $resource->getConnection('core_read');
@@ -69,8 +67,7 @@ class Showcase_Manager_Model_Observer
 			$fullImageUrl = (string) Mage::helper('catalog/image')->init($p, 'image')->resize(500);
 		}
 			
-		Mage::log('refid '.$refid, null, 'magicyourband.log', true);
-		Mage::log('fullImageUrl '.$fullImageUrl, null, 'magicyourband.log', true);
+
 
 		
 		if(!empty($refid)){

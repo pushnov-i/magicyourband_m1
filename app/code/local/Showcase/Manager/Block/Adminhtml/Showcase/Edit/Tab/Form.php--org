@@ -14,43 +14,31 @@ class Showcase_Manager_Block_Adminhtml_Showcase_Edit_Tab_Form extends Mage_Admin
 				"name" => "name",
 				));
 				
-				
-				$fieldset->addField('product_name', 'label', array(
-				  "label" => Mage::helper("showcase")->__("Product Name"),
-				));
-		
-		
-				/*$fieldset->addField("product_name", "text", array(
+				$fieldset->addField("product_name", "text", array(
 				"label" => Mage::helper("showcase")->__("Product Name"),					
-				"required" => false,
+				"class" => "required-entry",
+				"required" => true,
 				"name" => "product_name",
-				));*/
-				
-				$fieldset->addField('pjnumber', 'label', array(
-				  "label" => Mage::helper("showcase")->__("PJ Number"),
 				));
 				
-				/*$fieldset->addField("pjnumber", "text", array(
+				$fieldset->addField("pjnumber", "text", array(
 				"label" => Mage::helper("showcase")->__("PJ Number"),					
 				"class" => "required-entry",
-				"required" => false,
+				"required" => true,
 				"name" => "pjnumber",
-				));*/
+				));
 			
 				$fieldset->addField("description", "textarea", array(
 				"label" => Mage::helper("showcase")->__("Description"),
 				"name" => "description",
 				));
 				
-				$fieldset->addField('product_id', 'label', array(
-				  "label" => Mage::helper("showcase")->__("Product Id"),
-				));
-				
-				/*$fieldset->addField("product_id", "text", array(
+				$fieldset->addField("product_id", "text", array(
 				"label" => Mage::helper("showcase")->__("Product Id"),
-				"required" => false,
+				"class" => "required-entry",
+				"required" => true,
 				"name" => "product_id",
-				));*/
+				));
 				
 				$fieldset->addField("customer_name", "text", array(
 				"label" => Mage::helper("showcase")->__("Customer Name"),
@@ -59,27 +47,20 @@ class Showcase_Manager_Block_Adminhtml_Showcase_Edit_Tab_Form extends Mage_Admin
 				"name" => "customer_name",
 				));
 				
-				$fieldset->addField('link', 'label', array(
-				  "label" => Mage::helper("showcase")->__("Customization Link"),
-				));
-				
-				/*$fieldset->addField("link", "text", array(
+				$fieldset->addField("link", "text", array(
 				"label" => Mage::helper("showcase")->__("Customization Link"),
-				"required" => false,
+				"class" => "required-entry",
+				"required" => true,
 				"name" => "link",
-				));*/
-				
-				/*$fieldset->addField("image_url", "text", array(
-				"label" => Mage::helper("showcase")->__("Customized Image Url"),
-				"required" => false,
-				"name" => "image_url",
-				));*/
-				$fieldset->addField("is_active", "select", array(
-				"label" => Mage::helper("showcase")->__("Add to Showcase"),
-				"name" => "is_active",
-				'value'  => '1',
-				'values' => array('0' => 'No','1' => 'Yes'),
 				));
+				
+				$fieldset->addField("image_url", "text", array(
+				"label" => Mage::helper("showcase")->__("Customized Image Url"),
+				"class" => "required-entry",
+				"required" => true,
+				"name" => "image_url",
+				));
+
 				if (Mage::getSingleton("adminhtml/session")->getShowcaseData())
 				{
 					$form->setValues(Mage::getSingleton("adminhtml/session")->getShowcaseData());

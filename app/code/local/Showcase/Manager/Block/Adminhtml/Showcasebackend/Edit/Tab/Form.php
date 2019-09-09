@@ -1,19 +1,18 @@
 <?php
-class Showcase_Manager_Block_Adminhtml_Showcase_Edit_Tab_Form extends Mage_Adminhtml_Block_Widget_Form
+class Showcase_Manager_Block_Adminhtml_Showcasebackend_Edit_Tab_Form extends Mage_Adminhtml_Block_Widget_Form
 {
 		protected function _prepareForm()
 		{
 
 				$form = new Varien_Data_Form();
 				$this->setForm($form);
-				$fieldset = $form->addFieldset("showcase_form", array("legend"=>Mage::helper("showcase")->__("Showcase information")));
+				$fieldset = $form->addFieldset("showcasebackend_form", array("legend"=>Mage::helper("showcase")->__("Showcase information")));
 				
 				$fieldset->addField("name", "text", array(
 				"label" => Mage::helper("showcase")->__("Showcase Name"),					
 				"required" => false,
 				"name" => "name",
 				));
-				
 				
 				$fieldset->addField('product_name', 'label', array(
 				  "label" => Mage::helper("showcase")->__("Product Name"),

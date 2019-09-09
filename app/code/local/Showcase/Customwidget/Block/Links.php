@@ -5,15 +5,15 @@ class Showcase_Customwidget_Block_Links extends Mage_Core_Block_Abstract impleme
 	
   protected function _toHtml() {
     $html = '';
-	 $custom_designs = $this->getData('custom_designs');
+	 /*  $custom_designs = $this->getData('custom_designs');
       
-    if (empty($custom_designs)) {
+  if (empty($custom_designs)) {
       return $html;
-    }
+    }*/
 	
 	$arrayDesigns = explode(',', $custom_designs);
  
-	$showcaseCollection = Mage::getModel('showcase/showcase')->getCollection() ->addFieldToFilter('id', array('in'=> $arrayDesigns));
+	$showcaseCollection = Mage::getModel('showcase/showcase')->getCollection()->addFieldToFilter('is_active',1)->setOrder('created_at', 'desc');
 	$count=0;
 	$html .=$link_options;
 	$html .= '<ul class="products-grid row odd">';

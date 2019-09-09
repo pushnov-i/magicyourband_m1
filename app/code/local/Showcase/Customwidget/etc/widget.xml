@@ -2,7 +2,7 @@
 <widgets>
   <customwidget_links type="customwidget/links" translate="name description" module="customwidget">
     <name>Showcase Manager</name>
-    <parameters>
+   <!-- <parameters>
       <custom_designs>
         <label>Customer Designs</label>
         <visible>1</visible>
@@ -16,6 +16,6 @@
 		<description>If empty, the Page Title will be used</description>
 		<type>text</type>
 	  </anchor_text>
-    </parameters>
+    </parameters>-->
   </customwidget_links>
 </widgets>
