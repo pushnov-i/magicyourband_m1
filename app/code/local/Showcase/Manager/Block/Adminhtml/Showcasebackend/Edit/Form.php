@@ -1,4 +1,4 @@
-d<?php
+<?php
 class Showcase_Manager_Block_Adminhtml_Showcasebackend_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
 		protected function _prepareForm()

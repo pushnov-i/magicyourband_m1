@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
   <showcase_adminhtml_showcasebackend_index>
+	<reference name="head">
+		<action method="addCss">
+			<stylesheet>css/showcasemanager.css</stylesheet>
+		</action>
+	 </reference>	
 	<reference name="content">
 	  <block type="showcase/adminhtml_showcasebackend" name="showcasebackend" template="showcase/showcasebackend.phtml"/>
 	</reference>

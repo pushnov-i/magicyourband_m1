@@ -20,7 +20,7 @@ $designId=$singleCollection->getId();
 			$imageUrl = $singleCollection->getImageUrl(); 
 			if (empty($imageUrl)) 
 			{
-				$imageUrl = Mage::getModel('catalog/product')->getSmallImageUrl();;
+				$imageUrl = Mage::getSingleton('catalog/product_media_config')->getBaseMediaUrl(). '/placeholder/' .Mage::getStoreConfig("catalog/placeholder/small_image_placeholder");
 			} 
 		?>
 		<img src="<?php echo $imageUrl; ?>" alt="<?php echo $singleCollection->getProductName(); ?>">
@@ -28,26 +28,23 @@ $designId=$singleCollection->getId();
 		</a>
 		<div class="product-shop">
 			<?php echo $productBlock->getPriceHtml($_product); ?>
-			<!--<div class="price-box">
-				<span class="regular-price" id="product-price-1611">
-					<span class="price">$7.50</span>
-				</span>
-			</div>-->
 			<span>ID <?php echo $singleCollection->getId(); ?> </span>
-			<h2 class="product-name"><!--<a href="<?php echo $singleCollection->getLink(); ?>?pj=<?php echo $singleCollection->getPjnumber(); ?>" title="<?php echo $singleCollection->getProductName(); ?>">--><?php echo $singleCollection->getProductName(); ?><!--</a>--></h2>
+			<h2 class="product-name">
+				<?php echo $singleCollection->getProductName(); ?>
+			</h2>
 			<div class="desc_grid">Designed by <?php echo $singleCollection->getCustomerName(); ?></div>
 			<form method="post" action="<?php echo $this->getUrl('admin_showcase/adminhtml_showcasebackend/save'); ?>">
-			<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
-			<input type="hidden" name="id" value="<?php echo $singleCollection->getId(); ?>" />
-			<div class="desc_grid">
-			<?php if($singleCollection->getIsActive()) { ?>
-			<button type="submit" class="add-to-showcase">Remove From Showcase</a>
-			<input type="hidden" name="is_active" value="0" />
-			<?php } else { ?>
-			<button type="submit" class="add-to-showcase">Add to Showcase</a>
-			<input type="hidden" name="is_active" value="1" />
-			<?php }  ?>
-			</div>
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+				<input type="hidden" name="id" value="<?php echo $singleCollection->getId(); ?>" />
+				<div class="desc_grid">
+					<?php if($singleCollection->getIsActive()) { ?>
+					<button type="submit" class="add-to-showcase">Remove From Showcase</a>
+					<input type="hidden" name="is_active" value="0" />
+					<?php } else { ?>
+					<button type="submit" class="add-to-showcase">Add to Showcase</a>
+					<input type="hidden" name="is_active" value="1" />
+					<?php }  ?>
+				</div>
 			</form>
 		</div>
 		<div class="label-product">             
@@ -84,7 +81,7 @@ $productBlock = $this->getLayout()->createBlock('catalog/product_price');
 			$imageUrl = $singleCollection->getImageUrl(); 
 			if (empty($imageUrl)) 
 			{
-				$imageUrl = Mage::getModel('catalog/product')->getSmallImageUrl();;
+				$imageUrl = Mage::getSingleton('catalog/product_media_config')->getBaseMediaUrl(). '/placeholder/' .Mage::getStoreConfig("catalog/placeholder/small_image_placeholder");
 			} 
 		?>
 		<img src="<?php echo $imageUrl; ?>" alt="<?php echo $singleCollection->getProductName(); ?>">
@@ -130,19 +127,3 @@ if($count%6==0){ ?>
 } ?>
 </ul>	
 </div>
-<style>	
-.full-width-container {
-    width: 100%;
-    position: relative;
-    display: inline-block;
-}
-.products-grid{position: relative;margin-bottom: 30px;float:left;width:100%;}
-	.products-grid li.item{width:15%;list-style:none;float:left;}
-	.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12	{position: relative;min-height: 1px;padding-right: 10px;padding-left: 10px;}.grid_wrapper {    border: solid 1px #e7e7e7;    padding: 18px 15px 0 15px;overflow: hidden;}.products-grid .price-box {   
-	overflow: hidden;    margin: 0 0 3px;    width: 100%;}
-	.products-grid li.item a img{width:100%;}
-	.products-grid .price-box .regular-price .price{    font-size: 23px;    font-weight: normal;    color: #6cc957;}
-	.products-grid .product-name, .products-list .product-name{font-size: 15px;font-weight: normal;line-height: 18px;margin: 0 0 1px 0;}.products-grid .product-name a, .products-list .product-name a{color: #484848;text-decoration: none;}		
-	.add-to-showcase{border:1px solid #ea7601;background:#ea7601;color:#fff;padding:10px 10px;text-decoration:none;width:100%;}
-	.product-shop{text-align:center;}
-	</style>

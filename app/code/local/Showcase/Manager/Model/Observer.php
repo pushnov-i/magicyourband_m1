@@ -1,20 +1,12 @@
 <?php
 class Showcase_Manager_Model_Observer 
 {
-  /*  public function cartProductUpdateAfter($observer)
-    {
-        $this->cartProductAddAfter($observer);
-    }*/
 
     public function cartProductAddAfter($observer)
     {
         
         $_item = $observer->getEvent()->getItem();
 		$product = $_item->getProduct();
-		
-        /*$quote = $_item->getQuote();
-        $quoteItems = $quote->getItems();*/		
-		
 		
 		$resource = Mage::getSingleton('core/resource');
 		$readConnection = $resource->getConnection('core_read');
@@ -82,7 +74,6 @@ class Showcase_Manager_Model_Observer
 				$showcaseData['customer_name']=$customer->getName();
 			 }
 			 $showcaseData['link']=$product->getProductUrl();
-			 /*$showcaseData['customer_id']=$_REQUEST['customer_id'];*/
 
 			 $showcaseCollection = Mage::getModel('showcase/showcase')->getCollection()->addFieldToFilter('pjnumber',$showcaseData['pjnumber']);
 
@@ -97,24 +88,6 @@ class Showcase_Manager_Model_Observer
 		}
 		}
 
-        /* Detect Product ID and Qty programmatically 
-        $idToAdd = "ANY PRODUCT ID";
-        $qty = 1;
-
-        $productToAdd = Mage::getModel('catalog/product');
-        /* @var $productToAdd Mage_Catalog_Model_Product 
-        $productToAdd->load($idToAdd);
-
-       /* $this->_addProductToCart($productToAdd, $qty);*/
     }
 
-   /* protected function _addProductToCart($product, $qty)
-    {
-        $cart = Mage::getSingleton('checkout/cart');
-        if ($product->getId()) {
-            $cart->addProduct($product, $qty);
-            return true;
-        }
-        return false;
-    }*/
 }

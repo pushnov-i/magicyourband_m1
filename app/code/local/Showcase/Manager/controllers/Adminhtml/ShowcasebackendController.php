@@ -18,9 +18,7 @@ class Showcase_Manager_Adminhtml_ShowcasebackendController extends Mage_Adminhtm
     }
 	
 	public function editAction()
-	{			    
-			$this->_title($this->__("Showcase"));
-			$this->_title($this->__("Showcase"));
+	{
 			$this->_title($this->__("Edit Item"));
 			
 			$id = $this->getRequest()->getParam("id");
@@ -32,7 +30,7 @@ class Showcase_Manager_Adminhtml_ShowcasebackendController extends Mage_Adminhtm
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Showcase Manager"), Mage::helper("adminhtml")->__("Showcase Manager"));
 				$this->_addBreadcrumb(Mage::helper("adminhtml")->__("Showcase Description"), Mage::helper("adminhtml")->__("Showcase Description"));
 				$this->getLayout()->getBlock("head")->setCanLoadExtJs(true);
-				$this->_addContent($this->getLayout()->createBlock("showcase/adminhtml_showcase_edit"))->_addLeft($this->getLayout()->createBlock("showcase/adminhtml_showcase_edit_tabs"));
+				$this->_addContent($this->getLayout()->createBlock("showcasebackend/adminhtml_showcasebackend_edit"))->_addLeft($this->getLayout()->createBlock("showcasebackend/adminhtml_showcasebackend_edit_tabs"));
 				$this->renderLayout();
 			} 
 			else {

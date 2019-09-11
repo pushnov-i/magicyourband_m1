@@ -18,23 +18,11 @@ class Showcase_Manager_Block_Adminhtml_Showcasebackend_Edit_Tab_Form extends Mag
 				  "label" => Mage::helper("showcase")->__("Product Name"),
 				));
 		
-		
-				/*$fieldset->addField("product_name", "text", array(
-				"label" => Mage::helper("showcase")->__("Product Name"),					
-				"required" => false,
-				"name" => "product_name",
-				));*/
 				
 				$fieldset->addField('pjnumber', 'label', array(
 				  "label" => Mage::helper("showcase")->__("PJ Number"),
 				));
-				
-				/*$fieldset->addField("pjnumber", "text", array(
-				"label" => Mage::helper("showcase")->__("PJ Number"),					
-				"class" => "required-entry",
-				"required" => false,
-				"name" => "pjnumber",
-				));*/
+			
 			
 				$fieldset->addField("description", "textarea", array(
 				"label" => Mage::helper("showcase")->__("Description"),
@@ -44,12 +32,7 @@ class Showcase_Manager_Block_Adminhtml_Showcasebackend_Edit_Tab_Form extends Mag
 				$fieldset->addField('product_id', 'label', array(
 				  "label" => Mage::helper("showcase")->__("Product Id"),
 				));
-				
-				/*$fieldset->addField("product_id", "text", array(
-				"label" => Mage::helper("showcase")->__("Product Id"),
-				"required" => false,
-				"name" => "product_id",
-				));*/
+			
 				
 				$fieldset->addField("customer_name", "text", array(
 				"label" => Mage::helper("showcase")->__("Customer Name"),
@@ -62,17 +45,6 @@ class Showcase_Manager_Block_Adminhtml_Showcasebackend_Edit_Tab_Form extends Mag
 				  "label" => Mage::helper("showcase")->__("Customization Link"),
 				));
 				
-				/*$fieldset->addField("link", "text", array(
-				"label" => Mage::helper("showcase")->__("Customization Link"),
-				"required" => false,
-				"name" => "link",
-				));*/
-				
-				/*$fieldset->addField("image_url", "text", array(
-				"label" => Mage::helper("showcase")->__("Customized Image Url"),
-				"required" => false,
-				"name" => "image_url",
-				));*/
 				$fieldset->addField("is_active", "select", array(
 				"label" => Mage::helper("showcase")->__("Add to Showcase"),
 				"name" => "is_active",
