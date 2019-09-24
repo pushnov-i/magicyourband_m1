@@ -1,53 +1,53 @@
-<?
-	$params = array('_nosid' => true);
-
-	$epa = Mage::getUrl('personaliseit/product/epa', $params);
-	$callback = Mage::getUrl('personaliseit/product/callback', $params);
-
-	$query = http_build_query(array(
-		'a2cpost'	=> 1,
-		'epa'		=> $epa,
-		'ep3dUrl'	=> $callback,
-	));
-
-	$urls = array(
-		'mobile'	=> 'mobile_iframe_url',
-		'standard'	=> 'iframe_url',
-	);
-	
-	foreach($urls as &$url)
-	{
-		$url = trim(Mage::getStoreConfig("general/personaliseit-product-selector/{$url}"));
-
-		if($url)
-		{
-			$url .= "&{$query}";
-		}
-	}
-?>
-
-<iframe id="personalise-it-iframe" style="border: 0; width: 100%; height: 100%;" src=""></iframe>
-
-<script>
-	var urls = <?php echo json_encode($urls); ?>;
-
-	// Remove the mobile URL if we're not on a mobile.
-	var isMobile = window.matchMedia && window.matchMedia("(max-width: 800px)").matches;
-
-	if(!isMobile) {
-		urls['mobile'] = false;
-	}
-	
-	// Find the first available iframe URL.	
-	var url = "";
-		
-	for(var type in urls) {
-		if(urls[type]) {
-			url = urls[type];
-			break;
-		}
-	}
-
-	document.getElementById('personalise-it-iframe').src = url;
-</script>
-
+<?
+	$params = array('_nosid' => true);
+
+	$epa = Mage::getUrl('personaliseit/product/epa', $params);
+	$callback = Mage::getUrl('personaliseit/product/callback', $params);
+
+	$query = http_build_query(array(
+		'a2cpost'	=> 1,
+		'epa'		=> $epa,
+		'ep3dUrl'	=> $callback,
+	));
+
+	$urls = array(
+		'mobile'	=> 'mobile_iframe_url',
+		'standard'	=> 'iframe_url',
+	);
+	
+	foreach($urls as &$url)
+	{
+		$url = trim(Mage::getStoreConfig("general/personaliseit-product-selector/{$url}"));
+
+		if($url)
+		{
+			$url .= "&{$query}";
+		}
+	}
+?>
+
+<iframe id="personalise-it-iframe" style="border: 0; width: 100%; height: 100%;" src=""></iframe>
+
+<script>
+	var urls = <?php echo json_encode($urls); ?>;
+
+	// Remove the mobile URL if we're not on a mobile.
+	var isMobile = window.matchMedia && window.matchMedia("(max-width: 800px)").matches;
+
+	if(!isMobile) {
+		urls['mobile'] = false;
+	}
+	
+	// Find the first available iframe URL.	
+	var url = "";
+		
+	for(var type in urls) {
+		if(urls[type]) {
+			url = urls[type];
+			break;
+		}
+	}
+
+	document.getElementById('personalise-it-iframe').src = url;
+</script>
+

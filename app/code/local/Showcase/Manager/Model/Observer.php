@@ -4,8 +4,8 @@ class Showcase_Manager_Model_Observer
 
     public function cartProductAddAfter($observer)
     {
-        
-        $_item = $observer->getEvent()->getItem();
+		
+		$_item = $observer->getEvent()->getItem();
 		$product = $_item->getProduct();
 		
 		$resource = Mage::getSingleton('core/resource');
@@ -58,20 +58,91 @@ class Showcase_Manager_Model_Observer
 			$thumbnailImageUrl = (string) Mage::helper('catalog/image')->init($p, 'thumbnail')->resize(75);
 			$fullImageUrl = (string) Mage::helper('catalog/image')->init($p, 'image')->resize(500);
 		}
-			
-
-
 		
-		if(!empty($refid)){
+		if(!empty($refid)){	
+			$loadProductCollection = Mage::getModel('catalog/product')->getCollection()->addFieldToFilter('pjnumber',$refid);
+		}		
+		
+		if(!empty($refid) && count($loadProductCollection)<1){	
 			 
-			 $showcaseData['product_id']=$product->getId();
+			 
+			 
+			  $orgProduct = Mage::getModel('catalog/product')->load($product->getId());
+			  
+			/*  $categoryIds = $orgProduct->getCategoryIds();	*/
+
+			$categoryIds=array(105);
+			 Mage::log("cat ids".json_encode($orgProduct->getCategoryIds()), null, 'add-to-cart-observer.log', true);
+				 
+			try{
+			
+				$new = Mage::getModel('catalog/product');
+				$new->setData($orgProduct->getData());
+				$new->setName($orgProduct->getName());	
+				$new->setPjnumber($refid);		
+				if (Mage::getSingleton('customer/session')->isLoggedIn())
+				{	
+					$customer = Mage::getSingleton('customer/session')->getCustomer();	
+					$new->setDesignedBy($customer->getName());		
+				} 
+				else 
+				{	
+				$new->setDesignedBy('Guest User');	
+				}			
+				$new->setAddToShowcase(0);	
+				$new->setIsThisDesign(1);
+				$new->setId(null);
+				$new->setUrlPath($orgProduct->getData('url_path'));
+				$new->setStockData(array(
+					   'use_config_manage_stock' => 1, 
+					   'manage_stock'=>0, 
+					   'use_config_min_sale_qty' => 1, 
+					   'min_sale_qty'=>0, 
+					   'use_config_max_sale_qty' => 1, 
+					   'max_sale_qty'=>0, 
+					   'is_in_stock' => 0, 
+					   'qty' => 0 
+				   ));
+				   
+				$new->setSku($orgProduct->getSku().strtotime('now'));
+
+				$new->setAttributeSetId(10);
+				$new->setCategoryIds($categoryIds);
+				
+				Mage::log('Image url from showcase ' .$fullImageUrl, null, 'add-to-cart-observer.log', true);
+				
+				$image_url  = $fullImageUrl;
+				$image_type = substr(strrchr($image_url,"."),1);
+				
+				Mage::log('Image type ' .$image_type, null, 'add-to-cart-observer.log', true);
+				$filename   = $orgProduct->getSku().strtotime('now').'.'.$image_type; 
+				$filepath   = Mage::getBaseDir('media') . DS . 'import'. DS . $filename;
+				file_put_contents($filepath, file_get_contents(trim($image_url)));
+				$mediaAttribute = array (
+						'thumbnail',
+						'small_image',
+						'image'
+				);
+				
+				$new->addImageToMediaGallery($filepath, $mediaAttribute, false, false);
+				$new->setIsMassupdate(true)->setExcludeUrlRewrite(true);
+				Mage::log('File Path ' . $filepath . ', image url ' . $image_url, null, 'add-to-cart-observer.log', true);
+				
+				$new->save();
+
+			}catch(Exception $e){
+				 Mage::log($e->getMessage(), null, 'add-to-cart-observer-error.log', true);
+			}
+
+			 /*$showcaseData['product_id']=$product->getId();
 			 $showcaseData['product_name']=$product->getName();
-			 $showcaseData['pjnumber']=$refid;
+			 $showcaseData['pjnumber']=$refid;	
 			 $showcaseData['image_url']=$fullImageUrl;
-			 
 			 if (Mage::getSingleton('customer/session')->isLoggedIn()) {
 				$customer = Mage::getSingleton('customer/session')->getCustomer();
 				$showcaseData['customer_name']=$customer->getName();
+			 } else {
+				 $showcaseData['customer_name']='Guest User';
 			 }
 			 $showcaseData['link']=$product->getProductUrl();
 
@@ -83,7 +154,9 @@ class Showcase_Manager_Model_Observer
 							->addData($showcaseData)
 							->save();
 			 } else {
-			 }
+			 }*/
+		
+		
 		} else {
 		}
 		}

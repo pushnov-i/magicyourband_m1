@@ -1,18 +1,28 @@
-<?xml version="1.0"?>
-<layout version="0.1.0">
-  <showcase_adminhtml_showcasebackend_index>
-	<reference name="head">
-		<action method="addCss">
-			<stylesheet>css/showcasemanager.css</stylesheet>
-		</action>
-	 </reference>	
-	<reference name="content">
-	  <block type="showcase/adminhtml_showcasebackend" name="showcasebackend" template="showcase/showcasebackend.phtml"/>
-	</reference>
-  </showcase_adminhtml_showcasebackend_index>
-  <showcase_adminhtml_showcase_index>
-	<reference name="content">
-	  <block type="showcase/adminhtml_showcase" name="showcase" />
-	</reference>
-  </showcase_adminhtml_showcase_index>
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <showcase_adminhtml_showcasebackend_index>
+	<reference name="head">
+		<action method="addCss">
+			<stylesheet>css/showcasemanager.css</stylesheet>
+		</action>
+	 </reference>	
+	<reference name="content">
+	  <block type="showcase/adminhtml_showcasebackend" name="showcasebackend" template="showcase/showcasebackend.phtml"/>
+	</reference>
+  </showcase_adminhtml_showcasebackend_index>
+  <showcase_adminhtml_showcaseback_index>
+	<reference name="head">
+		<action method="addCss">
+			<stylesheet>css/showcasemanager.css</stylesheet>
+		</action>
+	 </reference>	
+	<reference name="content">
+	  <block type="showcase/adminhtml_showcaseback" name="showcaseback" template="showcase/showcaseback.phtml"/>
+	</reference>
+  </showcase_adminhtml_showcaseback_index>
+  <showcase_adminhtml_showcase_index>
+	<reference name="content">
+	  <block type="showcase/adminhtml_showcase" name="showcase" />
+	</reference>
+  </showcase_adminhtml_showcase_index>
 </layout>
