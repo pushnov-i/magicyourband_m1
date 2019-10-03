@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<widgets>
+  <customwidget_links type="customwidget/links" translate="name description" module="customwidget">
+    <name>Showcase Manager</name>
+   <!-- <parameters>
+      <custom_designs>
+        <label>Customer Designs</label>
+        <visible>1</visible>
+        <required>1</required>
+        <type>multiselect</type>
+        <source_model>customwidget/options</source_model>
+      </custom_designs>
+	   <anchor_text translate="label description">
+		<visible>1</visible>
+		<label>Anchor Custom Text</label>
+		<description>If empty, the Page Title will be used</description>
+		<type>text</type>
+	  </anchor_text>
+    </parameters>-->
+  </customwidget_links>
+</widgets>

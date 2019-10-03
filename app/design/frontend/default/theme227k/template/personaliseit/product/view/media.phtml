@@ -1,291 +1,291 @@
-<?php
-/**
- * Magento
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE_AFL.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade Magento to newer
- * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
- *
- * @category    design
- * @package     base_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- */
-
-/**
- * Product media data template
- *
- * @see Mage_Catalog_Block_Product_View_Media
- */
-?>
-
-<?php
-	$product = $_product = $this->getProduct();
-    $_helper = $this->helper('catalog/output');
-	
-	$messageEventHelper = new Gateway3D_PersonaliseIt_Helper_MessageEvent;
-
-	// Build EPA and callback URLs
-	$params = $product->personaliseit_use_mageid
-				? array('id' => $_product->getId())
-				: array();
-
-	$params['_nosid'] = true;
-	
-	$epa = Mage::getUrl('personaliseit/product/epa', $params);
-	$callback = Mage::getUrl('personaliseit/product/callback', $params);
-	$customer = Mage::getSingleton('customer/session')->getCustomer();
-
-	$guids = array_values(array_filter(array(
-		$customer->override_company_ref_id,
-		Mage::getStoreConfig("general/personaliseit-sl/override_company_ref_id", Mage::app()->getStore()), 
-		$product->personaliseit_company_ref_id
-	)));
-
-	$overrideVals = array(
-		'lo' => Mage::getStoreConfig('general/personaliseit-product-selector/override_locale', Mage::app()->getStore()),
-		'l' => Mage::getStoreConfig('general/personaliseit-product-selector/override_layout', Mage::app()->getStore()),
-		'c' => Mage::getStoreConfig('general/personaliseit-product-selector/override_config', Mage::app()->getStore()),
-	);
-	$overrideMatch = array(
-		'lo' => array('/(lo=)[^&]*/', '|(g3d-app.com/s/app/[^/]*/)[^/]*(/.*)|'),
-		'l' => array('/(l=)[^&]*/', '|(g3d-app.com/s/app/)[^/]*(/.*)|'),
-		'c' => array('/(c=)[^&]*/', '|(g3d-app.com/s/app/[^/]*/[^/]*/)[^/.]*(.*)|'),
-	);
-
-	// Build URLs
-	$urlParams = array(
-		'a2cpost'	=> 1,
-		'epa'		=> $epa,
-		'ep3dUrl'	=> $callback,
-		'guid'		=> $guids ? $guids[0] : '',
-		'meo'		=> $messageEventHelper->getOrigin(Mage::getBaseUrl()),
-		'mei'		=> $messageEventHelper->getId()
-	);
-
-	// Editing
-	$existingOptions = $product->getPreconfiguredValues()->getData('options');
-
-	if($existingOptions)
-	{
-		foreach($product->getOptions() as $o)
-		{
-			// Only check printJobId for backwards compat with nopreview app
-			if(in_array($o->getSku(), array('printJobRef', 'printJobId')) && isset($existingOptions[$o->getId()]))
-			{
-				$urlParams['pj'] = $existingOptions[$o->getId()];
-
-				$cartId = $this->getRequest()->getParam('id');
-				$urlParams['ep3dUrl'] = "{$urlParams['ep3dUrl']}update/{$cartId}/";
-			}
-
-			// printJobRef gets precendence
-			if($o->getSku() == 'printJobRef')
-			{
-				break;
-			}
-		}
-	}
-
-	// URL fields and the order of preference.	
-	$_urls = array(
-		'webgl'		=> 'personaliseit_gl_iframe_url',
-		'flash'		=> 'personaliseit_fl_iframe_url',
-		'mobile'	=> 'personaliseit_m_iframe_url',
-		'standard'	=> 'personaliseit_iframe_url',
-		'legacy'	=> 'easypromo3d_url',
-	);
-
-	$urls = array_map(function($u) use ($product, $messageEventHelper, $urlParams, $overrideVals, $overrideMatch)
-	{
-		$present = !!$product->{$u};
-
-		$_urlParams = $urlParams;
-
-		foreach($urlParams as $key => $value)
-		{
-			if(preg_match("/{$key}=/", $product->{$u}))
-			{
-				unset($_urlParams[$key]);
-			}
-		}
-
-		foreach($overrideVals as $key => $value)
-		{
-			if(trim($value) === '')
-			{
-				continue;
-			}
-			foreach($overrideMatch[$key] as $regex)
-			{
-				$product->{$u} = preg_replace($regex, '$1' . $value . '$2', $product->{$u});
-			}
-		}
-
-		$query = http_build_query($_urlParams);
-		$url = "{$product->$u}&{$query}";
-
-		return $present 
-				? array(
-					'url'		=> $url, 
-					'origin'	=> $messageEventHelper->getOrigin($url))
-				: false;
-	}, $_urls);
-	
-	$hasUrl = count(array_filter($urls, function($url) {
-		return $url;
-	})) > 0;
-?>
-
-<style>
-	#personalise-it-iframe {
-		border: 0; width: 100%; height: 100%;
-	}
-</style>
-
-<?php if($hasUrl && $product->personaliseit_company_ref_id && !$product->personaliseit_dp_enabled): ?>
-	<iframe id="personalise-it-iframe" style="" src=""></iframe>
-<?php else: ?>
-	<?php if ($_product->getImage() != 'no_selection' && $_product->getImage()): ?>
-	<p class="product-image product-image-zoom">
-		<?php
-			$_img = '<img id="image" src="'.$this->helper('catalog/image')->init($_product, 'image').'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
-			echo $_helper->productAttribute($_product, $_img, 'image');
-		?>
-	</p>
-	<p class="zoom-notice" id="track_hint"><?php echo $this->__('Double click on above image to view full picture') ?></p>
-	<div class="zoom">
-		<img id="zoom_out" src="<?php echo $this->getSkinUrl('images/slider_btn_zoom_out.gif') ?>" alt="<?php echo $this->__('Zoom Out') ?>" title="<?php echo $this->__('Zoom Out') ?>" class="btn-zoom-out" />
-		<div id="track">
-			<div id="handle"></div>
-		</div>
-		<img id="zoom_in" src="<?php echo $this->getSkinUrl('images/slider_btn_zoom_in.gif') ?>" alt="<?php echo $this->__('Zoom In') ?>" title="<?php echo $this->__('Zoom In') ?>" class="btn-zoom-in" />
-	</div>
-	<script type="text/javascript">
-	//<![CDATA[
-		Event.observe(window, 'load', function() {
-			product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');
-		});
-	//]]>
-	</script>
-	<?php else: ?>
-	<p class="product-image">
-		<?php
-			$_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->resize(265).'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
-			echo $_helper->productAttribute($_product, $_img, 'image');
-		?>
-	</p>
-	<?php endif; ?>
-	<?php if (count($this->getGalleryImages()) > 0): ?>
-	<div class="more-views">
-		<h2><?php echo $this->__('More Views') ?></h2>
-		<ul>
-		<?php foreach ($this->getGalleryImages() as $_image): ?>
-			<li>
-				<a href="#" onclick="popWin('<?php echo $this->getGalleryUrl($_image) ?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(56); ?>" width="56" height="56" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" /></a>
-			</li>
-		<?php endforeach; ?>
-		</ul>
-	</div>
-	<?php endif; ?>
-<?php endif; ?>
-	
-<?php if($hasUrl && $product->personaliseit_company_ref_id): ?>
-<script>
-	var urls = <?php echo json_encode($urls); ?>; 	
-
-	// Remove the mobile URL if we're not on a mobile.
-	var isMobile = window.matchMedia && window.matchMedia("(max-width: 800px)").matches;
-
-	if(!isMobile) {
-		urls['mobile'] = false;
-	}
-
-	// Remove the WebGL URL if there is no WebGL support.
-	var hasWebGl = !!document.createElement('canvas').getContext("webgl") || !!document.createElement('canvas').getContext('experimental-webgl');
-
-	if(!hasWebGl) {
-		urls['webgl'] = false;
-	}
-
-	// Remove the Flash URL if there is no Flash support.
-	var hasFlash = ((typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false));
-
-	if(!hasFlash) {
-		urls['flash'] = false;
-	}
-	
-	// Find the first available iframe URL.	
-	var url = "";
-	var origin = "";
-		
-	for(var type in urls) {
-		if(urls[type]) {
-			url = urls[type].url;
-			origin = urls[type].origin;
-			break;
-		}
-	}
-	
-	<?php if(!$product->personaliseit_dp_enabled): ?>
-	var iframe = document.getElementById('personalise-it-iframe');
-	iframe.src = url;
-
-	window.addEventListener("message", function(e) {
-		if(e.origin == origin && e.data.id == '<?php echo $messageEventHelper->getId() ?>') {
-			var name = e.data.name;
-			var body = e.data.body;
-
-			switch(name) {
-				case 'IFRAME_RESIZE':
-					iframe.style.height = body.height + "px";
-					break;
-			}
-		}
-	});
-	<?php else: ?>
-	var delayedPreview = new PersonaliseIt.DelayedPreview(url, '<?php echo $messageEventHelper->getId() ?>', origin);
-		<?php		
-			foreach($product->getOptions() as $o)
-			{
-				if($o->getType() == Gateway3D_PersonaliseIt_Model_Catalog_Product_Option::OPTION_TYPE_DROP_DOWN)
-				{
-					$values = array_values($o->getValues());
-					$sku = $values[0]->getSku();
-
-					$selector = "select_{$o->option_id}";
-				}
-				else
-				{
-					$sku = $o->getSku();
-
-					$selector = "options_{$o->option_id}_text";
-				}
-				
-				$matches = array();
-
-				if(preg_match('/^userText([0-9]*)$/', $sku, $matches))
-				{		
-					?>
-
-					delayedPreview.addTextField('<?php echo $selector ?>', <?php echo $matches[1] ?>);
-
-					<?php
-				}
-			}
-		?>
-	<?php endif; ?>	
-</script>
-<?php endif; ?>
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+
+<?php
+	$product = $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+	
+	$messageEventHelper = new Gateway3D_PersonaliseIt_Helper_MessageEvent;
+
+	// Build EPA and callback URLs
+	$params = $product->personaliseit_use_mageid
+				? array('id' => $_product->getId())
+				: array();
+
+	$params['_nosid'] = true;
+	
+	$epa = Mage::getUrl('personaliseit/product/epa', $params);
+	$callback = Mage::getUrl('personaliseit/product/callback', $params);
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+
+	$guids = array_values(array_filter(array(
+		$customer->override_company_ref_id,
+		Mage::getStoreConfig("general/personaliseit-sl/override_company_ref_id", Mage::app()->getStore()), 
+		$product->personaliseit_company_ref_id
+	)));
+
+	$overrideVals = array(
+		'lo' => Mage::getStoreConfig('general/personaliseit-product-selector/override_locale', Mage::app()->getStore()),
+		'l' => Mage::getStoreConfig('general/personaliseit-product-selector/override_layout', Mage::app()->getStore()),
+		'c' => Mage::getStoreConfig('general/personaliseit-product-selector/override_config', Mage::app()->getStore()),
+	);
+	$overrideMatch = array(
+		'lo' => array('/(lo=)[^&]*/', '|(g3d-app.com/s/app/[^/]*/)[^/]*(/.*)|'),
+		'l' => array('/(l=)[^&]*/', '|(g3d-app.com/s/app/)[^/]*(/.*)|'),
+		'c' => array('/(c=)[^&]*/', '|(g3d-app.com/s/app/[^/]*/[^/]*/)[^/.]*(.*)|'),
+	);
+
+	// Build URLs
+	$urlParams = array(
+		'a2cpost'	=> 1,
+		'epa'		=> $epa,
+		'ep3dUrl'	=> $callback,
+		'guid'		=> $guids ? $guids[0] : '',
+		'meo'		=> $messageEventHelper->getOrigin(Mage::getBaseUrl()),
+		'mei'		=> $messageEventHelper->getId()
+	);
+
+	// Editing
+	$existingOptions = $product->getPreconfiguredValues()->getData('options');
+
+	if($existingOptions)
+	{
+		foreach($product->getOptions() as $o)
+		{
+			// Only check printJobId for backwards compat with nopreview app
+			if(in_array($o->getSku(), array('printJobRef', 'printJobId')) && isset($existingOptions[$o->getId()]))
+			{
+				$urlParams['pj'] = $existingOptions[$o->getId()];
+
+				$cartId = $this->getRequest()->getParam('id');
+				$urlParams['ep3dUrl'] = "{$urlParams['ep3dUrl']}update/{$cartId}/";
+			}
+
+			// printJobRef gets precendence
+			if($o->getSku() == 'printJobRef')
+			{
+				break;
+			}
+		}
+	}
+
+	// URL fields and the order of preference.	
+	$_urls = array(
+		'webgl'		=> 'personaliseit_gl_iframe_url',
+		'flash'		=> 'personaliseit_fl_iframe_url',
+		'mobile'	=> 'personaliseit_m_iframe_url',
+		'standard'	=> 'personaliseit_iframe_url',
+		'legacy'	=> 'easypromo3d_url',
+	);
+
+	$urls = array_map(function($u) use ($product, $messageEventHelper, $urlParams, $overrideVals, $overrideMatch)
+	{
+		$present = !!$product->{$u};
+
+		$_urlParams = $urlParams;
+
+		foreach($urlParams as $key => $value)
+		{
+			if(preg_match("/{$key}=/", $product->{$u}))
+			{
+				unset($_urlParams[$key]);
+			}
+		}
+
+		foreach($overrideVals as $key => $value)
+		{
+			if(trim($value) === '')
+			{
+				continue;
+			}
+			foreach($overrideMatch[$key] as $regex)
+			{
+				$product->{$u} = preg_replace($regex, '$1' . $value . '$2', $product->{$u});
+			}
+		}
+
+		$query = http_build_query($_urlParams);
+		$url = "{$product->$u}&{$query}";
+
+		return $present 
+				? array(
+					'url'		=> $url, 
+					'origin'	=> $messageEventHelper->getOrigin($url))
+				: false;
+	}, $_urls);
+	
+	$hasUrl = count(array_filter($urls, function($url) {
+		return $url;
+	})) > 0;
+?>
+
+<style>
+	#personalise-it-iframe {
+		border: 0; width: 100%; height: 100%;
+	}
+</style>
+
+<?php if($hasUrl && $product->personaliseit_company_ref_id && !$product->personaliseit_dp_enabled): ?>
+	<iframe id="personalise-it-iframe" style="" src=""></iframe>
+<?php else: ?>
+	<?php if ($_product->getImage() != 'no_selection' && $_product->getImage()): ?>
+	<p class="product-image product-image-zoom">
+		<?php
+			$_img = '<img id="image" src="'.$this->helper('catalog/image')->init($_product, 'image').'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
+			echo $_helper->productAttribute($_product, $_img, 'image');
+		?>
+	</p>
+	<p class="zoom-notice" id="track_hint"><?php echo $this->__('Double click on above image to view full picture') ?></p>
+	<div class="zoom">
+		<img id="zoom_out" src="<?php echo $this->getSkinUrl('images/slider_btn_zoom_out.gif') ?>" alt="<?php echo $this->__('Zoom Out') ?>" title="<?php echo $this->__('Zoom Out') ?>" class="btn-zoom-out" />
+		<div id="track">
+			<div id="handle"></div>
+		</div>
+		<img id="zoom_in" src="<?php echo $this->getSkinUrl('images/slider_btn_zoom_in.gif') ?>" alt="<?php echo $this->__('Zoom In') ?>" title="<?php echo $this->__('Zoom In') ?>" class="btn-zoom-in" />
+	</div>
+	<script type="text/javascript">
+	//<![CDATA[
+		Event.observe(window, 'load', function() {
+			product_zoom = new Product.Zoom('image', 'track', 'handle', 'zoom_in', 'zoom_out', 'track_hint');
+		});
+	//]]>
+	</script>
+	<?php else: ?>
+	<p class="product-image">
+		<?php
+			$_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->resize(265).'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
+			echo $_helper->productAttribute($_product, $_img, 'image');
+		?>
+	</p>
+	<?php endif; ?>
+	<?php if (count($this->getGalleryImages()) > 0): ?>
+	<div class="more-views">
+		<h2><?php echo $this->__('More Views') ?></h2>
+		<ul>
+		<?php foreach ($this->getGalleryImages() as $_image): ?>
+			<li>
+				<a href="#" onclick="popWin('<?php echo $this->getGalleryUrl($_image) ?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>"><img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(56); ?>" width="56" height="56" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" /></a>
+			</li>
+		<?php endforeach; ?>
+		</ul>
+	</div>
+	<?php endif; ?>
+<?php endif; ?>
+	
+<?php if($hasUrl && $product->personaliseit_company_ref_id): ?>
+<script>
+	var urls = <?php echo json_encode($urls); ?>; 	
+
+	// Remove the mobile URL if we're not on a mobile.
+	var isMobile = window.matchMedia && window.matchMedia("(max-width: 800px)").matches;
+
+	if(!isMobile) {
+		urls['mobile'] = false;
+	}
+
+	// Remove the WebGL URL if there is no WebGL support.
+	var hasWebGl = !!document.createElement('canvas').getContext("webgl") || !!document.createElement('canvas').getContext('experimental-webgl');
+
+	if(!hasWebGl) {
+		urls['webgl'] = false;
+	}
+
+	// Remove the Flash URL if there is no Flash support.
+	var hasFlash = ((typeof navigator.plugins != "undefined" && typeof navigator.plugins["Shockwave Flash"] == "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) != false));
+
+	if(!hasFlash) {
+		urls['flash'] = false;
+	}
+	
+	// Find the first available iframe URL.	
+	var url = "";
+	var origin = "";
+		
+	for(var type in urls) {
+		if(urls[type]) {
+			url = urls[type].url;
+			origin = urls[type].origin;
+			break;
+		}
+	}
+	
+	<?php if(!$product->personaliseit_dp_enabled): ?>
+	var iframe = document.getElementById('personalise-it-iframe');
+	iframe.src = url;
+
+	window.addEventListener("message", function(e) {
+		if(e.origin == origin && e.data.id == '<?php echo $messageEventHelper->getId() ?>') {
+			var name = e.data.name;
+			var body = e.data.body;
+
+			switch(name) {
+				case 'IFRAME_RESIZE':
+					iframe.style.height = body.height + "px";
+					break;
+			}
+		}
+	});
+	<?php else: ?>
+	var delayedPreview = new PersonaliseIt.DelayedPreview(url, '<?php echo $messageEventHelper->getId() ?>', origin);
+		<?php		
+			foreach($product->getOptions() as $o)
+			{
+				if($o->getType() == Gateway3D_PersonaliseIt_Model_Catalog_Product_Option::OPTION_TYPE_DROP_DOWN)
+				{
+					$values = array_values($o->getValues());
+					$sku = $values[0]->getSku();
+
+					$selector = "select_{$o->option_id}";
+				}
+				else
+				{
+					$sku = $o->getSku();
+
+					$selector = "options_{$o->option_id}_text";
+				}
+				
+				$matches = array();
+
+				if(preg_match('/^userText([0-9]*)$/', $sku, $matches))
+				{		
+					?>
+
+					delayedPreview.addTextField('<?php echo $selector ?>', <?php echo $matches[1] ?>);
+
+					<?php
+				}
+			}
+		?>
+	<?php endif; ?>	
+</script>
+<?php endif; ?>
