@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Showcase_Manager>
+      <version>0.1.0</version>
+    </Showcase_Manager>
+  </modules>
+  <frontend>
+    <routers>
+      <showcase>
+        <use>standard</use>
+          <args>
+            <module>Showcase_Manager</module>
+            <frontName>showcase</frontName>
+          </args>
+      </showcase>
+    </routers>
+		<layout>
+		  <updates>
+			<showcase>
+			  <file>showcase.xml</file>
+			</showcase>
+		  </updates>
+		</layout>
+		  <events> 
+			<!--<checkout_cart_product_add_after>-->
+			<sales_quote_item_save_after>
+				<observers>
+					<showcase>
+						<class>showcase/observer</class>
+						<method>cartProductAddAfter</method>
+					</showcase>
+				</observers>
+			</sales_quote_item_save_after>	
+			<!--</checkout_cart_product_add_after>-->
+		</events>
+  </frontend>
+  <global>
+    <helpers>
+      <showcase>
+        <class>Showcase_Manager_Helper</class>
+      </showcase>
+    </helpers>
+	<blocks>
+	  <showcase>
+		<class>Showcase_Manager_Block</class>
+	  </showcase>
+	   <showcasebackend>
+		<class>Showcase_Manager_Block</class>
+	  </showcasebackend>
+	   <showcaseback>
+		<class>Showcase_Manager_Block</class>
+	  </showcaseback>
+	</blocks>
+	<models>
+	  <showcase>
+		<class>Showcase_Manager_Model</class>
+		<resourceModel>showcase_mysql4</resourceModel>
+	  </showcase>
+	  <showcase_mysql4>
+		<class>Showcase_Manager_Model_Mysql4</class>
+		<entities>		  
+			  <showcase>
+				<table>showcase_manager</table>
+			  </showcase>
+        </entities>
+	  </showcase_mysql4>
+	</models>
+	<resources>
+	  <showcase_setup>
+		<setup>
+		  <module>Showcase_Manager</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </showcase_setup>
+	  <showcase_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </showcase_write>
+	  <showcase_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </showcase_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <showcase>
+	    <use>admin</use>
+		<args>
+		  <module after="Mage_Adminhtml">Showcase_Manager</module>
+		  <frontName>admin_showcase</frontName>
+		</args>
+	  </showcase>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <showcase module="showcase">
+		<title>Showcase</title>
+		<sort_order>100</sort_order>
+		<children>
+		   <!--<showcase module="showcase">
+		    <title>Manage Showcase</title>
+			<sort_order>0</sort_order>
+			<action>admin_showcase/adminhtml_showcase</action>
+		  </showcase>-->
+		   <showcasebackend module="showcase">
+			<title>All Custom Designs</title>
+			<sort_order>1</sort_order>
+			<action>admin_showcase/adminhtml_showcasebackend</action>
+		  </showcasebackend>
+		   <showcaseback module="showcase">
+			<title>Showcase Manager</title>
+			<sort_order>1</sort_order>
+			<action>admin_showcase/adminhtml_showcaseback</action>
+		  </showcaseback>
+		</children>
+	  </showcase>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<showcase translate="title" module="showcase">
+			  <title>Showcase</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+			  <showcasebackend translate="title">
+				<title>showcase</title>
+			  </showcasebackend>
+			  <showcaseback translate="title">
+				<title>showcase</title>
+			  </showcaseback>
+			  <showcase translate="title">
+				<title>Manage Showcase</title>
+				<sort_order>0</sort_order>
+			  </showcase>
+			  </children>
+			</showcase>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<showcase>
+		  <file>showcase.xml</file>
+		</showcase>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

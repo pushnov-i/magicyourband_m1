@@ -1,0 +1,123 @@
+<div class="full-width-container">
+<div class="page-title category-title">
+    <h1>All Custom Designs</h1>
+</div>
+<?php 
+ $productCollection = $this->getCollection(); 
+ $count=0;
+?>
+<div class="pager-display">
+    <table cellspacing="0" class="actions">
+        <tr>
+
+            <td class="pager">
+            <?php echo $this->__('Page') ?>
+            <?php $_curPage  = $this->getCollection()->getCurPage() ?>
+            <?php $_lastPage = $this->getCollection()->getLastPageNumber() ?>
+            <?php if($_curPage>1): ?>
+                <a href="<?php echo $this->getUrl('admin_showcase/adminhtml_showcasebackend/index/',array('page' => $_curPage-1)); ?>" title="<?php echo $this->__('Previous page') ?>"><img src="<?php echo $this->getSkinUrl('images/pager_arrow_left.gif') ?>" alt="Go to Previous page" class="arrow"/></a>
+            <?php else: ?>
+                <img src="<?php echo $this->getSkinUrl('images/pager_arrow_left_off.gif') ?>" alt="Go to Previous page" class="arrow"/>
+            <?php endif; ?>
+
+            <input type="text" name="<?php echo $this->getVarNamePage() ?>" value="<?php echo $_curPage ?>" class="input-text page" onkeypress="window.location.href='<?php echo $this->getUrl('admin_showcase/adminhtml_showcasebackend/index/',array('page' => $_lastPage)); ?>'"/>
+
+            <?php if($_curPage < $_lastPage): ?>
+                <a href="<?php echo $this->getUrl('admin_showcase/adminhtml_showcasebackend/index/',array('page' => $_curPage+1)); ?>" title="<?php echo $this->__('Next page') ?>"><img src="<?php echo $this->getSkinUrl('images/pager_arrow_right.gif') ?>" alt="Go to Next page" class="arrow"/></a>
+            <?php else: ?>
+                <img src="<?php echo $this->getSkinUrl('images/pager_arrow_right_off.gif') ?>" alt="Go to Previous page" class="arrow"/>
+            <?php endif; ?>
+
+            <?php echo $this->__('of %s pages', $this->getCollection()->getLastPageNumber()) ?>
+            <!--<span class="separator">|</span>
+            <?php echo $this->__('View') ?>
+            <select name="limit" class="showcase-limit" onchange="">
+                <option value="20"<?php if($this->getCollection()->getPageSize()==20): ?> selected="selected"<?php endif; ?>>20</option>
+                <option value="30"<?php if($this->getCollection()->getPageSize()==30): ?> selected="selected"<?php endif; ?>>30</option>
+                <option value="50"<?php if($this->getCollection()->getPageSize()==50): ?> selected="selected"<?php endif; ?>>50</option>
+                <option value="100"<?php if($this->getCollection()->getPageSize()==100): ?> selected="selected"<?php endif; ?>>100</option>
+                <option value="200"<?php if($this->getCollection()->getPageSize()==200): ?> selected="selected"<?php endif; ?>>200</option>
+            </select>
+            <?php echo $this->__('per page') ?>
+			-->
+			<span class="separator">|</span>
+            <?php echo $this->__('Total %d records found', $this->getCollection()->getSize()) ?>
+            <span id="<?php echo $this->getHtmlId() ?>-total-count" class="no-display"><?php echo $this->getCollection()->getSize() ?></span>
+            <?php if($this->getRssLists()): ?>
+                <?php foreach ($this->getRssLists() as $_rss): ?>
+                <span class="separator">|</span><a href="<?php echo $_rss->getUrl() ?>" class="link-feed"><?php echo $_rss->getLabel() ?></a>
+                <?php endforeach ?>
+            <?php endif; ?>
+        </td>
+        <td class="filter-actions a-right">
+        </td>
+        </tr>
+    </table>
+</div>
+<ul class="products-grid row odd">
+<?php foreach($productCollection as $_product){ 
+$_product =  Mage::getModel('catalog/product')->load($_product->getId());
+$productBlock = $this->getLayout()->createBlock('catalog/product_price');
+$designId=$_product->getId();
+$productName=$_product->getName();
+$description=$_product->getDescription();
+$customerName = $_product->getDesignedBy();
+if(empty($customerName)){
+	$customerName='Guest User';
+}
+?>
+<li class="item first col-xs-12 col-sm-4" style="list-style: none;">
+	<div class="grid_wrapper">
+		<a href="<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/catalog_product/edit', array('id' => $_product->getId())); ?>" title="<?php echo $productName; ?>" >
+		<?php 
+			$imageUrl = Mage::helper('catalog/image')->init($_product, 'small_image')->resize(210); 
+			if (empty($imageUrl)) 
+			{
+				$imageUrl = Mage::getSingleton('catalog/product_media_config')->getBaseMediaUrl(). '/placeholder/' .Mage::getStoreConfig("catalog/placeholder/small_image_placeholder");
+			} 
+		?>
+		<img src="<?php echo $imageUrl; ?>" alt="<?php echo $productName; ?>">
+		</a>
+		<div class="product-shop">
+			<?php echo $productBlock->getPriceHtml($_product); ?>
+			<h2 class="product-name">
+				<a href="<?php echo Mage::helper('adminhtml')->getUrl('adminhtml/catalog_product/edit', array('id' => $_product->getId())); ?>" title="<?php echo $productName; ?>" >
+					<?php echo $productName; ?>
+				</a>
+			</h2>
+			<div class="desc_grid">Designed by <?php echo $customerName; ?></div>
+			<!--<p class="description"><?php echo $description; ?></p>-->
+			<form method="post" action="<?php echo $this->getUrl('admin_showcase/adminhtml_showcasebackend/save'); ?>">
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+				<input type="hidden" name="id" value="<?php echo $_product->getId(); ?>" />
+				<div class="desc_grid">
+					<?php if($_product->getAddToShowcase()) { ?>
+					<button type="submit" class="add-to-showcase">Remove From Showcase</a>
+					<input type="hidden" name="add_to_showcase" value="0" />
+					<?php } else { ?>
+					<button type="submit" class="add-to-showcase">Add to Showcase</a>
+					<input type="hidden" name="add_to_showcase" value="1" />
+					<?php }  ?> 
+				</div>
+			</form>
+		</div>
+		<div class="label-product">             
+		</div>
+	</div>
+</li>
+<?php 
+$count++;
+if($count%6==0){ ?>
+	</ul><ul class="products-grid row odd">
+	<?php
+}
+} ?>
+</ul>	
+</div>
+<script>
+
+    shwocaseGridJsObject = new varienGrid('shwocaseGrid', 'https://technodeft.website/magicyourband/index.php/admin_showcase/adminhtml_showcasebackend/index/key/1b12d853fc9be1d61a0ada2cb2a4bcf6/#', 'page', 'sort', 'dir', 'product_filter');
+    shwocaseGridJsObject.useAjax = '0';
+            shwocaseGridJsObject.rowClickCallback = openGridRow;
+            		 
+</script>

@@ -343,11 +343,13 @@ class Gateway3D_PersonaliseIt_Model_Product_Callback
 					$required[] = $key;
 				}
 			}
-
-			$this->_ensureProductHasCustomOptions($this->_product, $required);
+			
+			$product = Mage::getModel('catalog/product')->load($this->_product->getId());
+					
+			$this->_ensureProductHasCustomOptions($product, $required);
 			
 			$params = array(
-				'options'	=> $this->_getOptions($this->_product),
+				'options'	=> $this->_getOptions($product),
 				'qty'		=> @$this->_data['quantity'] ?: 1
 			);
 	
@@ -357,7 +359,7 @@ class Gateway3D_PersonaliseIt_Model_Product_Callback
 			}
 			else
 			{
-				$cart->addProduct($this->_product, $params);
+				$cart->addProduct($product, $params);
 			}
 		}
 		
