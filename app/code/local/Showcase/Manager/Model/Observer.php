@@ -93,16 +93,7 @@ class Showcase_Manager_Model_Observer
 				$new->setIsThisDesign(1);
 				$new->setId(null);
 				$new->setUrlPath($orgProduct->getData('url_path'));
-				$new->setStockData(array(
-					   'use_config_manage_stock' => 1, 
-					   'manage_stock'=>0, 
-					   'use_config_min_sale_qty' => 1, 
-					   'min_sale_qty'=>0, 
-					   'use_config_max_sale_qty' => 1, 
-					   'max_sale_qty'=>0, 
-					   'is_in_stock' => 0, 
-					   'qty' => 0 
-				   ));
+
 				   
 				$new->setSku($orgProduct->getSku().strtotime('now'));
 
@@ -129,6 +120,20 @@ class Showcase_Manager_Model_Observer
 				Mage::log('File Path ' . $filepath . ', image url ' . $image_url, null, 'add-to-cart-observer.log', true);
 				
 				$new->save();
+				
+				$stockItem = Mage::getModel('cataloginventory/stock_item');
+				$stockItem->assignProduct($new);
+				$stockItem->setData('is_in_stock', 1);
+				$stockItem->setData('stock_id', 1);
+				$stockItem->setData('store_id', 1);
+				$stockItem->setData('manage_stock', 0);
+				$stockItem->setData('use_config_manage_stock', 1);
+				$stockItem->setData('min_sale_qty', 1);
+				$stockItem->setData('use_config_min_sale_qty', 0);
+				$stockItem->setData('max_sale_qty', 1000);
+				$stockItem->setData('use_config_max_sale_qty', 0);
+				$stockItem->setData('qty', 10000);
+				$stockItem->save();
 
 			}catch(Exception $e){
 				 Mage::log($e->getMessage(), null, 'add-to-cart-observer-error.log', true);
