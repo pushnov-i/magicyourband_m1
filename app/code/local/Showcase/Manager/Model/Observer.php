@@ -71,7 +71,7 @@ class Showcase_Manager_Model_Observer
 			  
 			/*  $categoryIds = $orgProduct->getCategoryIds();	*/
 
-			$categoryIds=array(105);
+            $categoryIds=array(105);
 			 Mage::log("cat ids".json_encode($orgProduct->getCategoryIds()), null, 'add-to-cart-observer.log', true);
 				 
 			try{
@@ -98,15 +98,16 @@ class Showcase_Manager_Model_Observer
 				$new->setSku($orgProduct->getSku().strtotime('now'));
 
 				$new->setAttributeSetId(10);
+
 				$new->setCategoryIds($categoryIds);
-				
+
 				Mage::log('Image url from showcase ' .$fullImageUrl, null, 'add-to-cart-observer.log', true);
 				
 				$image_url  = $fullImageUrl;
 				$image_type = substr(strrchr($image_url,"."),1);
 				
 				Mage::log('Image type ' .$image_type, null, 'add-to-cart-observer.log', true);
-				$filename   = $orgProduct->getSku().strtotime('now').'.'.$image_type; 
+				$filename   = $orgProduct->getSku().strtotime('now').'.'.$image_type;
 				$filepath   = Mage::getBaseDir('media') . DS . 'import'. DS . $filename;
 				file_put_contents($filepath, file_get_contents(trim($image_url)));
 				$mediaAttribute = array (
@@ -118,7 +119,17 @@ class Showcase_Manager_Model_Observer
 				$new->addImageToMediaGallery($filepath, $mediaAttribute, false, false);
 				$new->setIsMassupdate(true)->setExcludeUrlRewrite(true);
 				Mage::log('File Path ' . $filepath . ', image url ' . $image_url, null, 'add-to-cart-observer.log', true);
-				
+
+                /**
+                 * set product as disabled MAG-2
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+                $new->setStatus(Mage_Catalog_Model_Product_Status::STATUS_DISABLED);
+
+                /**
+                 * set product as disabled MAG-2
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
 				$new->save();
 				
 				$stockItem = Mage::getModel('cataloginventory/stock_item');
