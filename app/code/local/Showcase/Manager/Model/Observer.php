@@ -11,7 +11,21 @@ class Showcase_Manager_Model_Observer
 		$resource = Mage::getSingleton('core/resource');
 		$readConnection = $resource->getConnection('core_read');
 		$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="info_buyRequest"';
-		$results = $readConnection->fetchAll($query);
+        $results = $readConnection->fetchAll($query);
+
+        /**
+         * set product as disabled MAG-4
+         * by WebMeridian (c) 2019 all right reserved
+         */
+
+        $lastId = $readConnection->showTableStatus('catalog_product_entity');
+        $lastId = '-'.$lastId['Auto_increment'];
+
+        /**
+         * set product as disabled MAG-4
+         * by WebMeridian (c) 2019 all right reserved
+         */
+
 		$refid='';
 		$unserialized = array();
 		if(!empty($results)){
@@ -78,7 +92,17 @@ class Showcase_Manager_Model_Observer
 			
 				$new = Mage::getModel('catalog/product');
 				$new->setData($orgProduct->getData());
-				$new->setName($orgProduct->getName());	
+
+                /**
+                 * set product as disabled MAG-4
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+				$new->setName($orgProduct->getName() . $lastId);
+                /**
+                 * set product as disabled MAG-4
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+
 				$new->setPjnumber($refid);		
 				if (Mage::getSingleton('customer/session')->isLoggedIn())
 				{	
@@ -92,7 +116,17 @@ class Showcase_Manager_Model_Observer
 				$new->setAddToShowcase(0);	
 				$new->setIsThisDesign(1);
 				$new->setId(null);
-				$new->setUrlPath($orgProduct->getData('url_path'));
+
+                /**
+                 * set product as disabled MAG-4
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+				$new->setUrlKey($orgProduct->getData('url_key') . $lastId);
+				$new->setUrlPath($orgProduct->getData('url_path') . $lastId);
+                /**
+                 * set product as disabled MAG-4
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
 
 				   
 				$new->setSku($orgProduct->getSku().strtotime('now'));
