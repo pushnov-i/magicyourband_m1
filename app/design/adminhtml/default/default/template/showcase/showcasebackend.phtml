@@ -3,7 +3,17 @@
     <h1>All Custom Designs</h1>
 </div>
 <?php 
- $productCollection = $this->getCollection(); 
+ $productCollection = $this->getCollection();
+/**
+ * set product as disabled MAG-5
+ * by WebMeridian (c) 2019 all right reserved
+ */
+$productCollection->addAttributeToSelect('*');
+
+/**
+ * set product as disabled MAG-5
+ * by WebMeridian (c) 2019 all right reserved
+ */
  $count=0;
 ?>
 <div class="pager-display">
@@ -55,8 +65,17 @@
     </table>
 </div>
 <ul class="products-grid row odd">
-<?php foreach($productCollection as $_product){ 
-$_product =  Mage::getModel('catalog/product')->load($_product->getId());
+<?php foreach($productCollection as $_product){
+/**
+ * set product as disabled MAG-5
+ * by WebMeridian (c) 2019 all right reserved
+ */
+//$_product =  Mage::getModel('catalog/product')->load($_product->getId());
+
+/**
+ * set product as disabled MAG-5
+ * by WebMeridian (c) 2019 all right reserved
+ */
 $productBlock = $this->getLayout()->createBlock('catalog/product_price');
 $designId=$_product->getId();
 $productName=$_product->getName();
@@ -92,10 +111,10 @@ if(empty($customerName)){
 				<input type="hidden" name="id" value="<?php echo $_product->getId(); ?>" />
 				<div class="desc_grid">
 					<?php if($_product->getAddToShowcase()) { ?>
-					<button type="submit" class="add-to-showcase">Remove From Showcase</a>
+					<button type="submit" class="add-to-showcase">Remove From Showcase</button>
 					<input type="hidden" name="add_to_showcase" value="0" />
 					<?php } else { ?>
-					<button type="submit" class="add-to-showcase">Add to Showcase</a>
+					<button type="submit" class="add-to-showcase">Add to Showcase</button>
 					<input type="hidden" name="add_to_showcase" value="1" />
 					<?php }  ?> 
 				</div>
