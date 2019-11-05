@@ -1,6 +1,8 @@
 <?php
-class Showcase_Manager_Model_Observer 
+
+class Showcase_Manager_Model_Observer
 {
+    const OLD_URL = '.html';
 
     public function cartProductAddAfter($observer)
     {
@@ -19,7 +21,7 @@ class Showcase_Manager_Model_Observer
          */
 
         $lastId = $readConnection->showTableStatus('catalog_product_entity');
-        $lastId = '-'.$lastId['Auto_increment'];
+        $lastId = '-' . $lastId['Auto_increment'];
 
         /**
          * set product as disabled MAG-4
@@ -117,16 +119,18 @@ class Showcase_Manager_Model_Observer
 				$new->setIsThisDesign(1);
 				$new->setId(null);
 
-                /**
-                 * set product as disabled MAG-4
-                 * by WebMeridian (c) 2019 all right reserved
-                 */
-				$new->setUrlKey($orgProduct->getData('url_key') . $lastId);
-				$new->setUrlPath($orgProduct->getData('url_path') . $lastId);
-                /**
-                 * set product as disabled MAG-4
-                 * by WebMeridian (c) 2019 all right reserved
-                 */
+                    /**
+                     * set product as disabled MAG-4
+                     * by WebMeridian (c) 2019 all right reserved
+                     */
+                    $new->setWebsiteIds(array(1, 0));
+                    $new->setUrlKey($orgProduct->getData('url_key') . $lastId);
+                    $oldUrl = str_replace(self::OLD_URL, '', $orgProduct->getData('url_path'));
+                    $new->setUrlPath($oldUrl . $lastId . self::OLD_URL);
+                    /**
+                     * set product as disabled MAG-4
+                     * by WebMeridian (c) 2019 all right reserved
+                     */
 
 				   
 				$new->setSku($orgProduct->getSku().strtotime('now'));
