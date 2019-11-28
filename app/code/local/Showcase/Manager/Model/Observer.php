@@ -1,6 +1,8 @@
 <?php
-class Showcase_Manager_Model_Observer 
+
+class Showcase_Manager_Model_Observer
 {
+    const OLD_URL = '.html';
 
     public function cartProductAddAfter($observer)
     {
@@ -11,7 +13,21 @@ class Showcase_Manager_Model_Observer
 		$resource = Mage::getSingleton('core/resource');
 		$readConnection = $resource->getConnection('core_read');
 		$query = 'SELECT `value` FROM `sales_flat_quote_item_option` WHERE `item_id`='.$_item->getId().' AND `code`="info_buyRequest"';
-		$results = $readConnection->fetchAll($query);
+        $results = $readConnection->fetchAll($query);
+
+        /**
+         * set product as disabled MAG-4
+         * by WebMeridian (c) 2019 all right reserved
+         */
+
+        $lastId = $readConnection->showTableStatus('catalog_product_entity');
+        $lastId = '-' . $lastId['Auto_increment'];
+
+        /**
+         * set product as disabled MAG-4
+         * by WebMeridian (c) 2019 all right reserved
+         */
+
 		$refid='';
 		$unserialized = array();
 		if(!empty($results)){
@@ -71,14 +87,24 @@ class Showcase_Manager_Model_Observer
 			  
 			/*  $categoryIds = $orgProduct->getCategoryIds();	*/
 
-			$categoryIds=array(105);
+            $categoryIds=array(105);
 			 Mage::log("cat ids".json_encode($orgProduct->getCategoryIds()), null, 'add-to-cart-observer.log', true);
 				 
 			try{
 			
 				$new = Mage::getModel('catalog/product');
 				$new->setData($orgProduct->getData());
-				$new->setName($orgProduct->getName());	
+
+                /**
+                 * set product as disabled MAG-4
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+				$new->setName($orgProduct->getName() . $lastId);
+                /**
+                 * set product as disabled MAG-4
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+
 				$new->setPjnumber($refid);		
 				if (Mage::getSingleton('customer/session')->isLoggedIn())
 				{	
@@ -92,21 +118,34 @@ class Showcase_Manager_Model_Observer
 				$new->setAddToShowcase(0);	
 				$new->setIsThisDesign(1);
 				$new->setId(null);
-				$new->setUrlPath($orgProduct->getData('url_path'));
+
+                    /**
+                     * set product as disabled MAG-4
+                     * by WebMeridian (c) 2019 all right reserved
+                     */
+                    $new->setWebsiteIds(array(1, 0));
+                    $new->setUrlKey($orgProduct->getData('url_key') . $lastId);
+                    $oldUrl = str_replace(self::OLD_URL, '', $orgProduct->getData('url_path'));
+                    $new->setUrlPath($oldUrl . $lastId . self::OLD_URL);
+                    /**
+                     * set product as disabled MAG-4
+                     * by WebMeridian (c) 2019 all right reserved
+                     */
 
 				   
 				$new->setSku($orgProduct->getSku().strtotime('now'));
 
 				$new->setAttributeSetId(10);
+
 				$new->setCategoryIds($categoryIds);
-				
+
 				Mage::log('Image url from showcase ' .$fullImageUrl, null, 'add-to-cart-observer.log', true);
 				
 				$image_url  = $fullImageUrl;
 				$image_type = substr(strrchr($image_url,"."),1);
 				
 				Mage::log('Image type ' .$image_type, null, 'add-to-cart-observer.log', true);
-				$filename   = $orgProduct->getSku().strtotime('now').'.'.$image_type; 
+				$filename   = $orgProduct->getSku().strtotime('now').'.'.$image_type;
 				$filepath   = Mage::getBaseDir('media') . DS . 'import'. DS . $filename;
 				file_put_contents($filepath, file_get_contents(trim($image_url)));
 				$mediaAttribute = array (
@@ -118,7 +157,17 @@ class Showcase_Manager_Model_Observer
 				$new->addImageToMediaGallery($filepath, $mediaAttribute, false, false);
 				$new->setIsMassupdate(true)->setExcludeUrlRewrite(true);
 				Mage::log('File Path ' . $filepath . ', image url ' . $image_url, null, 'add-to-cart-observer.log', true);
-				
+
+                /**
+                 * set product as disabled MAG-2
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
+                $new->setStatus(Mage_Catalog_Model_Product_Status::STATUS_DISABLED);
+
+                /**
+                 * set product as disabled MAG-2
+                 * by WebMeridian (c) 2019 all right reserved
+                 */
 				$new->save();
 				
 				$stockItem = Mage::getModel('cataloginventory/stock_item');

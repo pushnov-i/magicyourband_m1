@@ -3,8 +3,20 @@ class Showcase_Customwidget_Block_Links extends Mage_Catalog_Block_Product_List 
   
   protected function _toHtml() {
     $html = '';
-	$arrayDesigns = explode(',', $custom_designs);
-	$showcaseCollection = Mage::getModel('catalog/product')->getCollection()->addFieldToFilter('add_to_showcase',1)->setOrder('created_at', 'desc');
+      /**
+       * Removed unused code string , because it can cause an critical error
+       */
+	//$arrayDesigns = explode(',', $custom_designs);
+
+	$showcaseCollection = Mage::getModel('catalog/product')
+        ->getCollection()
+        ->addAttributeToSelect('*')
+        ->addFieldToFilter('add_to_showcase',1)
+
+        /**
+         * Changed default sort by to sort by name ASC
+         */
+        ->setOrder('name', 'asc');
 
     $toolbar = $this->getToolbarBlock();
     $toolbar->setCollection($showcaseCollection);
